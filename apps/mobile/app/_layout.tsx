@@ -11,7 +11,8 @@ import { IBMPlexMono_400Regular } from '@expo-google-fonts/ibm-plex-mono/400Regu
 import { IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono/600SemiBold';
 import { IBMPlexSans_400Regular } from '@expo-google-fonts/ibm-plex-sans/400Regular';
 import { IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans/600SemiBold';
-import { useTheme } from '@rmmm/ui/native';
+import { en, useTheme } from '@rmmm/ui/native';
+import { SessionProvider } from '@/lib/session';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -35,7 +36,7 @@ export default function RootLayout() {
   if (!loaded && !error) return null;
 
   return (
-    <>
+    <SessionProvider>
       <StatusBar style={t.background === '#111111' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
@@ -47,7 +48,12 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="styleguide" options={{ title: 'Style guide' }} />
+        <Stack.Screen name="auth" options={{ title: en.auth.title }} />
+        <Stack.Screen
+          name="onboarding"
+          options={{ title: en.onboarding.title, headerBackVisible: false }}
+        />
       </Stack>
-    </>
+    </SessionProvider>
   );
 }

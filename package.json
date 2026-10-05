@@ -17,7 +17,9 @@
     "brand:sync": "node scripts/sync-brand.mjs",
     "brand:check": "node scripts/sync-brand.mjs --check",
     "copy:check": "node scripts/check-copy.mjs",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm brand:check && pnpm copy:check"
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm brand:check && pnpm copy:check",
+    "test:db": "bash scripts/db/test.sh",
+    "test:e2e:security": "bash scripts/e2e/security.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

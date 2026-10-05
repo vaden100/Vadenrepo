@@ -34,6 +34,8 @@ export const themes = {
     onPrimary: colors.paper,
     focus: colors.caution,
     highlight: colors.caution,
+    /** Error text. Not in SPEC 13: stamp-red is only 3.3:1 on ink, so dark mode uses a lighter red. */
+    danger: '#FF8A8F',
   },
   light: {
     background: colors.paper,
@@ -45,6 +47,7 @@ export const themes = {
     onPrimary: colors.paper,
     focus: colors.paperInk,
     highlight: colors.caution,
+    danger: colors.stampRed,
   },
 } as const;
 

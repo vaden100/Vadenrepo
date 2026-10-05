@@ -7,8 +7,9 @@ are working on before changing anything.
 ## How we build
 
 - One phase at a time (SPEC 16). A phase is done only when its acceptance checks pass.
-- Current status: **Phase 0 done** (repo, tokens, brand wiring, fonts, legal stubs,
-  styleguide). Next: Phase 1 (database, auth, security core).
+- Current status: **Phase 1 done** (schema + RLS, roles with 2FA for staff, audit log,
+  IP/device bans, rate limiter, OTP sign-in, 18+ age gate and terms on web and mobile).
+  Next: Phase 2 (submit a story).
 
 ## Layout
 
@@ -20,7 +21,7 @@ packages/tokens  design tokens -> CSS vars (cssVariables()) + RN values, WCAG te
 packages/ui      shared/ (strings, stamp meta, formatters), web/ (DOM + styles.css), native/ (RN)
 packages/api     zod enums mirroring the Postgres enums in SPEC 7 (schemas + client later)
 packages/search-core  identifier classifier + normalizers (Phase 4)
-supabase/        migrations, edge functions, seed (Phase 1)
+supabase/        migrations (schema, RLS, functions), seed.sql (*.demo), pgtap/ (DB tests)
 brand/           SVG assets. Run `pnpm brand:sync` after changing anything here.
 ```
 
@@ -35,6 +36,8 @@ pnpm dev:web            # http://localhost:3000, style guide at /styleguide
 pnpm dev:mobile         # Expo
 pnpm check              # lint, format, typecheck, unit tests, brand sync, copy rules
 pnpm build              # web (next build), mobile (expo export JS bundles), worker (tsc)
+pnpm test:db            # pgTAP suite on a throwaway Postgres 16 (needs pgvector + pgTAP)
+pnpm test:e2e:security  # Postgres + PostgREST + next start: bans, rate limits, audit, RLS over HTTP
 ```
 
 Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm audit`.
@@ -58,6 +61,19 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
 - The wordmark is an image, never live text.
 - Every text/background pair must pass WCAG AA. Add new pairs to `packages/tokens/src/contrast.test.ts`.
   `statusResolvedText` exists because paper on the spec's `statusResolved` is 4.37:1.
+
+**Database and security (SPEC 7, 9, 11)**
+
+- Every new table: enable RLS, add policies, add tests in `supabase/pgtap/`, and an audit trigger
+  if staff write to it (`private.audit_write('always' | 'staff_only')`).
+- Staff checks use `private.is_staff()/is_moderator()/is_editor()/is_admin()`. They require
+  `aal2` (2FA). Never check `profiles.role` directly in a policy.
+- `SECURITY DEFINER` functions: `set search_path = ''` and fully qualified names.
+- Never store raw birth dates, never put story text in `audit_log` (the trigger redacts it).
+- Web requests pass `proxy.ts`: ban check (IP/CIDR + device), then rate limit (`RATE_RULES`
+  in `apps/web/lib/security/rate-limit.ts`), then session refresh. Add a rule for every new
+  mutating API route. Lookups fail open; Postgres re-checks bans on writes.
+- `supabase/pgtap/setup/supabase_shim.sql` is for local tests only. Never run it on Supabase.
 
 **Privacy and safety (SPEC 1, 7, 11)**
 

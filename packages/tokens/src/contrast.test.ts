@@ -21,6 +21,9 @@ describe('WCAG AA text pairs (SPEC 13)', () => {
     ['mute on ink (>= 16px only)', colors.mute, colors.ink, AA_LARGE],
     ['light theme muted text', themes.light.textMuted, themes.light.background, AA_NORMAL],
     ['light theme text on surface', themes.light.text, themes.light.surface, AA_NORMAL],
+    ['dark danger text on ink', themes.dark.danger, themes.dark.background, AA_NORMAL],
+    ['dark danger text on graphite', themes.dark.danger, themes.dark.surface, AA_NORMAL],
+    ['light danger text on paper', themes.light.danger, themes.light.background, AA_NORMAL],
   ])('%s', (_label, fg, bg, min) => {
     expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(min);
   });

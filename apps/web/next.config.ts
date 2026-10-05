@@ -4,15 +4,32 @@ const isProd = process.env.NODE_ENV === 'production';
 
 // SPEC 11: CSP, HSTS, X-Frame-Options, Referrer-Policy. Third-party origins (Supabase,
 // Turnstile, Mux, Sentry) get added here as each phase brings them in.
+const supabaseOrigin = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
+      : '';
+  } catch {
+    return '';
+  }
+})();
+const supabaseConnect = supabaseOrigin
+  ? ` ${supabaseOrigin} ${supabaseOrigin.replace(/^http/, 'ws')}`
+  : '';
+const turnstile = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+  ? ' https://challenges.cloudflare.com'
+  : '';
+
 const csp = [
   "default-src 'self'",
-  // Next.js inline bootstrap scripts need 'unsafe-inline' until we move to nonces (Phase 1).
-  `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval'"}`,
+  // Next.js inline bootstrap scripts need 'unsafe-inline' until we move to nonces.
+  `script-src 'self' 'unsafe-inline'${isProd ? '' : " 'unsafe-eval'"}${turnstile}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self'${supabaseConnect}`,
   "media-src 'self' blob:",
+  `frame-src 'self'${turnstile}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

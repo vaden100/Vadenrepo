@@ -1,0 +1,56 @@
+.form {
+  display: grid;
+  gap: 16px;
+  max-width: 420px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+.label {
+  font-weight: 600;
+  font-size: 14px;
+}
+.hint {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+.input {
+  min-height: 48px;
+  padding: 0 12px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-paper);
+  font: inherit;
+  font-size: 16px;
+}
+.input:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 0;
+}
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.2em;
+}
+.check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  line-height: 24px;
+}
+.check input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--rmmm-stamp-red);
+  flex-shrink: 0;
+}
+.error {
+  color: var(--color-danger);
+  margin: 0;
+}
+.status {
+  margin: 0;
+}

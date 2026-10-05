@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { en } from '@rmmm/ui';
 
 export function SiteHeader() {
   return (
@@ -14,8 +15,7 @@ export function SiteHeader() {
           />
         </Link>
         <nav aria-label="Main">
-          <Link href="/legal/privacy">Privacy</Link>
-          <Link href="/legal/terms">Terms</Link>
+          <Link href="/account">{en.account.nav}</Link>
         </nav>
       </div>
     </header>
