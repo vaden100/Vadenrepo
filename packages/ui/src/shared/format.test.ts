@@ -26,7 +26,13 @@ describe('evidence summary copy (SPEC 4.2)', () => {
 
   it('singular and empty cases', () => {
     const facts = evidenceFacts(
-      { reportCount: 1, reviewedCount: 0, amountLostCents: 0, lastReportAt: now, linkedPageCount: 0 },
+      {
+        reportCount: 1,
+        reviewedCount: 0,
+        amountLostCents: 0,
+        lastReportAt: now,
+        linkedPageCount: 0,
+      },
       now,
     );
     expect(facts).toEqual(['Reported 1 time', '0 reviewed', 'Last report today']);
@@ -66,5 +72,14 @@ describe('copy rules (SPEC 14)', () => {
     expect(s).not.toMatch(/—/);
     expect(s).not.toMatch(/\p{Extended_Pictographic}/u);
     expect(s.toLowerCase()).not.toMatch(/\bscammer|\bfraudster/);
+  });
+});
+
+describe('stamp contrast', () => {
+  it.each(STAMP_KINDS)('%s text passes WCAG AA on its ink', async (k) => {
+    const { colors, contrastRatio } = await import('@rmmm/tokens');
+    expect(
+      contrastRatio(colors[stampMeta[k].text], colors[stampMeta[k].color]),
+    ).toBeGreaterThanOrEqual(4.5);
   });
 });

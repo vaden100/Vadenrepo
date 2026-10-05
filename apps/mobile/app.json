@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "RUN ME MY MONEY",
+    "slug": "run-me-my-money",
+    "scheme": "rmmm",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#111111",
+    "ios": {
+      "bundleIdentifier": "com.vadenworld.runmemymoney",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.vadenworld.runmemymoney"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#111111"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

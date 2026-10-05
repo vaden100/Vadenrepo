@@ -12,6 +12,11 @@ export const colors = {
   statusVerifying: '#B8860B',
   statusContacted: '#2E5E8C',
   statusResolved: '#2F7D4A',
+  /**
+   * NOT in SPEC 13. Paper text on statusResolved is 4.37:1 (fails AA), so text-bearing
+   * fills (stamps) use this slightly deeper green. statusResolved stays for non-text use.
+   */
+  statusResolvedText: '#2C7646',
   statusClosed: '#5A5A57',
 } as const;
 

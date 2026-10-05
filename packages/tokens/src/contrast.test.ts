@@ -14,7 +14,7 @@ describe('WCAG AA text pairs (SPEC 13)', () => {
     ['ink on caution', colors.ink, colors.caution, AA_NORMAL],
     ['paper on stamp-red', colors.paper, colors.stampRed, AA_NORMAL],
     ['paper on status-contacted', colors.paper, colors.statusContacted, AA_NORMAL],
-    ['paper on status-resolved', colors.paper, colors.statusResolved, AA_NORMAL],
+    ['paper on status-resolved-text', colors.paper, colors.statusResolvedText, AA_NORMAL],
     ['paper on status-closed', colors.paper, colors.statusClosed, AA_NORMAL],
     ['ink on status-verifying', colors.ink, colors.statusVerifying, AA_NORMAL],
     // mute on ink is approved for >= 16px only (SPEC 13); hold it to the large-text bar.
@@ -23,6 +23,11 @@ describe('WCAG AA text pairs (SPEC 13)', () => {
     ['light theme text on surface', themes.light.text, themes.light.surface, AA_NORMAL],
   ])('%s', (_label, fg, bg, min) => {
     expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(min);
+  });
+
+  it('spec status-resolved is below AA with paper text (why statusResolvedText exists)', () => {
+    expect(contrastRatio(colors.paper, colors.statusResolved)).toBeLessThan(AA_NORMAL);
+    expect(contrastRatio(colors.statusResolved, colors.ink)).toBeGreaterThanOrEqual(AA_LARGE);
   });
 
   it('caution focus ring is visible on ink (non-text 3:1)', () => {

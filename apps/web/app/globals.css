@@ -1,0 +1,138 @@
+/* Self-hosted fonts (SIL OFL), bundled by Next from @fontsource. No third-party font CDN. */
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@rmmm/ui/web/styles.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--rmmm-caution);
+}
+[data-theme='light'] a {
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  background: var(--rmmm-caution);
+  color: var(--rmmm-ink);
+  padding: 8px 12px;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+}
+.site-header nav {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-weight: 600;
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 64px;
+  padding: 32px 0 48px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+.site-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.display {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-stretch: 70%;
+  font-size: clamp(40px, 9vw, 88px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+}
+.h1 {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-stretch: 75%;
+  font-size: var(--text-h1-size);
+  line-height: var(--text-h1-line);
+  text-transform: uppercase;
+  margin: 0;
+}
+.h2 {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: var(--text-h2-size);
+  line-height: var(--text-h2-line);
+  margin: 0;
+}
+.lede {
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 28px;
+  max-width: 60ch;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+
+.prose {
+  max-width: 70ch;
+}
+.prose h2 {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 22px;
+  margin: 32px 0 8px;
+}

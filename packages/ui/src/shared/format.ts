@@ -33,7 +33,8 @@ export interface EvidenceSummaryData {
 /** Ordered evidence facts, e.g. "Reported 6 times", "4 reviewed", "$1,240 reported lost". */
 export function evidenceFacts(d: EvidenceSummaryData, now?: Date): string[] {
   const facts = [en.evidence.reported(d.reportCount), en.evidence.reviewed(d.reviewedCount)];
-  if (d.amountLostCents > 0) facts.push(en.evidence.lost(formatMoney(d.amountLostCents, d.currency)));
+  if (d.amountLostCents > 0)
+    facts.push(en.evidence.lost(formatMoney(d.amountLostCents, d.currency)));
   facts.push(en.evidence.lastReport(timeAgo(d.lastReportAt, now)));
   if (d.linkedPageCount > 0) facts.push(en.evidence.linkedPages(d.linkedPageCount));
   return facts;

@@ -30,7 +30,8 @@ const svgFiles = (dir) =>
     .sort();
 
 // 1. copy to web/public
-for (const f of svgFiles(brand)) write(path.join(webOut, f), fs.readFileSync(path.join(brand, f), 'utf8'));
+for (const f of svgFiles(brand))
+  write(path.join(webOut, f), fs.readFileSync(path.join(brand, f), 'utf8'));
 for (const f of svgFiles(path.join(brand, 'icons')))
   write(path.join(webOut, 'icons', f), fs.readFileSync(path.join(brand, 'icons', f), 'utf8'));
 

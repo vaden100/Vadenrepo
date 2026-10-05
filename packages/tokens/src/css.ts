@@ -1,11 +1,11 @@
 import { colors, themes } from './colors';
-import { fontFamilies, typeScale } from './type';
+import { typeScale, type fontFamilies } from './type';
 import { borderWidth, motion, radius, space } from './layout';
 
 const kebab = (s: string) => s.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 
 const fallbacks = {
-  headline: "'Archivo', 'Arial Narrow', system-ui, sans-serif",
+  headline: "'Archivo Variable', 'Archivo', 'Arial Narrow', system-ui, sans-serif",
   body: "'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif",
   mono: "'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace",
 } as const satisfies Record<keyof typeof fontFamilies, string>;
@@ -18,9 +18,7 @@ function block(selector: string, vars: Record<string, string | number>): string 
 }
 
 function themeVars(name: keyof typeof themes): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(themes[name]).map(([k, v]) => [`color-${kebab(k)}`, v]),
-  );
+  return Object.fromEntries(Object.entries(themes[name]).map(([k, v]) => [`color-${kebab(k)}`, v]));
 }
 
 /** All tokens as CSS custom properties. Dark is the default; `[data-theme="light"]` opts in. */
