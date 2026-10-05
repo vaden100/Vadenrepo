@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PLACEHOLDER: replace with the provided Vaden World artwork. Tileable zigzag bottom edge for ReceiptCard (repeat-x). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="8" viewBox="0 0 16 8" role="img">
+<path fill="#F2EEE6" d="M0 0H16V0L12 8L8 0L4 8L0 0Z"/>
+</svg>
