@@ -6,7 +6,8 @@ import { sha256Hex } from '@/lib/security/client';
 import { db } from '@/lib/server/db';
 import { DRAFT_COOKIE, newToken, setOwnerCookie, type ReportRow } from '@/lib/server/report-access';
 import { draftView } from '@/lib/server/reports';
-import { getSession } from '@/lib/session';
+import { DEVICE_HEADER } from '@/lib/security/client';
+import { caller } from '@/lib/server/caller';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,11 +21,8 @@ export const POST = handler('reports.create', async (req: NextRequest) => {
   const parsed = ReportDraft.pick({ category: true }).safeParse(body);
   if (!parsed.success) return apiError(422, 'invalid', 'Some fields need attention.');
 
-  const session = await getSession();
-  const member =
-    session?.profile?.age_confirmed_at && session.profile.terms_accepted_at
-      ? session.user.id
-      : null;
+  const who = await caller(req);
+  const member = who?.onboarded ? who.userId : null;
   const token = newToken();
   const [row] = await db.insert<ReportRow>('reports', {
     reporter_id: member,
@@ -38,7 +36,10 @@ export const POST = handler('reports.create', async (req: NextRequest) => {
     requestId: requestId(req),
     mode: member ? 'account' : 'anonymous',
   });
-  const res = json(await draftView(row), 201);
+  // The app keeps the token in its keychain; browsers only get the httpOnly cookie.
+  const app = req.headers.has(DEVICE_HEADER);
+  const view = await draftView(row);
+  const res = json(app ? { ...view, draftToken: `${row.id}.${token}` } : view, 201);
   setOwnerCookie(res, req, DRAFT_COOKIE, `${row.id}.${token}`, 30);
   return res;
 });

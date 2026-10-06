@@ -49,6 +49,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="styleguide" options={{ title: 'Style guide' }} />
         <Stack.Screen name="auth" options={{ title: en.auth.title }} />
+        <Stack.Screen name="report-status" options={{ title: en.report.status.title }} />
         <Stack.Screen
           name="onboarding"
           options={{ title: en.onboarding.title, headerBackVisible: false }}

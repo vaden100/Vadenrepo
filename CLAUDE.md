@@ -7,10 +7,9 @@ are working on before changing anything.
 ## How we build
 
 - One phase at a time (SPEC 16). A phase is done only when its acceptance checks pass.
-- Current status: **Phase 1 done**, plus the website raised to the Website Build Spec
-  (`docs/website-foundations.md`, audit in `docs/self-audit.md`): nonce CSP, theme engine,
-  shell (nav, mobile menu, command palette), content pages, contact/consent/deletion flows,
-  SEO, Playwright + axe suites. Next: Phase 2 (submit a story).
+- Current status: **Phase 2 done** (submit a story: `/report` on web, Report tab in the app,
+  `apps/worker` media pipeline), on top of Phase 1 and the Website Build Spec
+  (`docs/website-foundations.md`, audit in `docs/self-audit.md`). Next: Phase 3 (admin console).
 - Website criteria that conflict with SPEC.md are decided in `docs/website-foundations.md`
   section 17. SPEC.md wins.
 
@@ -19,7 +18,7 @@ are working on before changing anything.
 ```
 apps/web         Next.js 16 App Router (public site, /styleguide, /legal/*, later /admin)
 apps/mobile      Expo SDK 57 + Expo Router (tabs: Lookup, Episodes, Report, Cases, Me)
-apps/worker      Node media pipeline (Phase 2); has /healthz only for now
+apps/worker      Node media pipeline: job queue, magic bytes, ClamAV, EXIF/metadata strip, hashes, OCR/transcripts
 packages/tokens  design tokens -> CSS vars (cssVariables()) + RN values, WCAG tests
 packages/ui      shared/ (strings, stamp meta, formatters), web/ (DOM + styles.css), native/ (RN)
 packages/api     zod enums mirroring the Postgres enums in SPEC 7 (schemas + client later)
@@ -40,7 +39,8 @@ pnpm dev:mobile         # Expo
 pnpm check              # lint, format, typecheck, unit tests, brand sync, copy rules
 pnpm build              # web (next build), mobile (expo export JS bundles), worker (tsc)
 pnpm test:db            # pgTAP suite on a throwaway Postgres 16 (needs pgvector + pgTAP)
-pnpm test:e2e:security  # Postgres + PostgREST + next start: bans, rate limits, audit, RLS over HTTP
+pnpm test:e2e:security  # Postgres + PostgREST + next start + worker: bans, rate limits, audit, RLS,
+                        # and the Phase 2 acceptance report in a real browser (e2e-stack/)
 pnpm --filter @rmmm/web build:e2e && pnpm --filter @rmmm/web test:e2e   # Playwright + axe
 ```
 
@@ -91,6 +91,14 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
   in `apps/web/lib/security/rate-limit.ts`), then session refresh. Add a rule for every new
   mutating API route. Lookups fail open; Postgres re-checks bans on writes.
 - `supabase/pgtap/setup/supabase_shim.sql` is for local tests only. Never run it on Supabase.
+
+**Reports and evidence (SPEC 4.1, 6, 11)**
+
+- Report routes check access with `reportAccess()` (account, draft token, or claim token; cookie
+  on web, `x-rmmm-draft` / `x-rmmm-claim` headers in the app). Everyone else gets 404.
+- Only token and claim-code hashes are stored. The claim code is shown once.
+- Evidence never goes public from the raw upload: the worker overwrites each file with its
+  cleaned version. `STORAGE_DRIVER=local` is for development and E2E only.
 
 **Privacy and safety (SPEC 1, 7, 11)**
 

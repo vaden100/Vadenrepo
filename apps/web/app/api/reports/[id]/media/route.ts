@@ -39,6 +39,9 @@ export const POST = handler<Ctx>('reports.media.create', async (req: NextRequest
   if (!kind) return apiError(422, 'invalid', 'That file type is not accepted.', { mime: 'type' });
   if (m.bytes > MEDIA_RULES[kind].maxBytes)
     return apiError(422, 'invalid', 'That file is too large.', { bytes: 'too_large' });
+  if (m.redactBoxes?.length && kind !== 'image') {
+    return apiError(422, 'invalid', 'Only images can be covered.', { redactBoxes: 'type' });
+  }
   if (m.voiceNote && kind !== 'audio')
     return apiError(422, 'invalid', 'A voice note must be audio.', { mime: 'type' });
   if (m.durationSeconds !== undefined) {
@@ -69,7 +72,8 @@ export const POST = handler<Ctx>('reports.media.create', async (req: NextRequest
     storage_path: key,
     duration_ms: m.durationSeconds ? Math.round(m.durationSeconds * 1000) : null,
     voice_note: Boolean(m.voiceNote),
-    reporter_redacted: Boolean(m.redacted),
+    reporter_redacted: Boolean(m.redacted || m.redactBoxes?.length),
+    redact_boxes: m.redactBoxes?.length ? m.redactBoxes : null,
   });
   if (!row) throw new Error('media insert returned nothing');
   const upload = await createSignedUpload(key, mime, MEDIA_RULES[kind].maxBytes, id);

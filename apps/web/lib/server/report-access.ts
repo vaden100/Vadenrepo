@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import type { NextRequest, NextResponse } from 'next/server';
 import { sha256Hex } from '@/lib/security/client';
-import { getSession } from '@/lib/session';
+import { caller } from './caller';
 import { db, q } from './db';
 
 /**
@@ -11,6 +11,14 @@ import { db, q } from './db';
  */
 export const DRAFT_COOKIE = 'rmmm_draft';
 export const CLAIM_COOKIE = 'rmmm_claim';
+/** The mobile app keeps the same "<id>.<token>" values in the keychain and sends them as headers. */
+export const DRAFT_HEADER = 'x-rmmm-draft';
+export const CLAIM_HEADER = 'x-rmmm-claim';
+
+export const draftPair = (req: NextRequest) =>
+  parsePair(req.headers.get(DRAFT_HEADER) ?? req.cookies.get(DRAFT_COOKIE)?.value);
+export const claimPair = (req: NextRequest) =>
+  parsePair(req.headers.get(CLAIM_HEADER) ?? req.cookies.get(CLAIM_COOKIE)?.value);
 
 export interface ReportRow {
   id: string;
@@ -73,20 +81,21 @@ export async function reportAccess(req: NextRequest, id: string): Promise<Access
   const [row] = await db.select<ReportRow>('reports', `id=eq.${q(id)}&select=*`);
   if (!row) return null;
 
-  const session = await getSession();
-  if (session && row.reporter_id === session.user.id)
-    return { report: row, via: 'account', userId: session.user.id };
+  const who = row.reporter_id ? await caller(req) : null;
+  if (who && row.reporter_id === who.userId) {
+    return { report: row, via: 'account', userId: who.userId };
+  }
 
-  const draft = parsePair(req.cookies.get(DRAFT_COOKIE)?.value);
+  const draft = draftPair(req);
   if (
     draft?.id === id &&
     row.draft_token_hash &&
     row.draft_token_hash === (await sha256Hex(`draft:${draft.token}`))
   ) {
-    return { report: row, via: 'draft', userId: session?.user.id ?? null };
+    return { report: row, via: 'draft', userId: null };
   }
 
-  const claim = parsePair(req.cookies.get(CLAIM_COOKIE)?.value);
+  const claim = claimPair(req);
   if (
     claim?.id === id &&
     row.anon_claim_hash &&

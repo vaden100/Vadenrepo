@@ -360,3 +360,105 @@ test('a file that lies about its type is rejected by the worker', async ({ reque
   });
   expect(exe.status()).toBe(422);
 });
+
+test('the mobile app flow works with header tokens and no cookies', async () => {
+  const base = process.env.WEB_URL ?? 'http://127.0.0.1:3311';
+  const app = {
+    'x-rmmm-device': 'e2e-install-id',
+    'x-forwarded-for': '198.18.0.42',
+    'content-type': 'application/json',
+  };
+  const call = (method: string, p: string, body?: unknown, extra: Record<string, string> = {}) =>
+    fetch(base + p, {
+      method,
+      headers: { ...app, ...extra },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+
+  const created = await call('POST', '/api/reports', { category: 'credit_repair' });
+  expect(created.status).toBe(201);
+  const { id, draftToken } = (await created.json()) as { id: string; draftToken: string };
+  expect(draftToken).toMatch(new RegExp(`^${id}\\.`));
+  const auth = { 'x-rmmm-draft': draftToken };
+
+  // Without the token the draft does not exist for this caller.
+  expect((await call('GET', `/api/reports/${id}`)).status).toBe(404);
+  const patched = await call(
+    'PATCH',
+    `/api/reports/${id}`,
+    {
+      who: { phone: '(404) 555-0199' },
+      story: 'They took 400 for credit repair and never did anything.',
+    },
+    auth,
+  );
+  expect(patched.status).toBe(200);
+
+  // A covered photo: the worker paints the box before the file is kept.
+  const img = await sharp({
+    create: { width: 200, height: 100, channels: 3, background: '#ffffff' },
+  })
+    .jpeg()
+    .toBuffer();
+  const slot = await call(
+    'POST',
+    `/api/reports/${id}/media`,
+    { mime: 'image/jpeg', bytes: img.length, redactBoxes: [{ x: 0.5, y: 0, w: 0.5, h: 1 }] },
+    auth,
+  );
+  expect(slot.status).toBe(201);
+  const { media, upload } = (await slot.json()) as {
+    media: { id: string };
+    upload: { url: string; headers: Record<string, string> };
+  };
+  expect(
+    (
+      await fetch(base + upload.url, {
+        method: 'PUT',
+        headers: { ...upload.headers, 'x-forwarded-for': '198.18.0.42' },
+        body: img,
+      })
+    ).status,
+  ).toBe(200);
+  expect(
+    (await call('POST', `/api/reports/${id}/media/${media.id}/complete`, {}, auth)).status,
+  ).toBe(200);
+
+  const sent = await call(
+    'POST',
+    `/api/reports/${id}/submit`,
+    { consentTruth: true, consentTerms: true, ageConfirmed: true },
+    auth,
+  );
+  expect(sent.status).toBe(201);
+  const result = (await sent.json()) as { id: string; code: string; claimCode: string };
+  expect(result.id).toBe(id);
+
+  // The used draft token no longer opens anything; the claim header does.
+  expect(
+    (await call('PATCH', `/api/reports/${id}`, { story: 'changed after sending' }, auth)).status,
+  ).toBe(404);
+  const status = await call('GET', '/api/reports/claim', undefined, {
+    'x-rmmm-claim': `${id}.${result.claimCode}`,
+  });
+  expect(((await status.json()) as { report: { code: string } }).report.code).toBe(result.code);
+
+  await expect
+    .poll(
+      async () =>
+        (
+          await rest<{ upload_status: string }[]>(`media?id=eq.${media.id}&select=upload_status`)
+        )[0]!.upload_status,
+      { timeout: 30_000 },
+    )
+    .toBe('ready');
+  const [row] = await rest<MediaRow[]>(`media?id=eq.${media.id}&select=*`);
+  const { data, info } = await sharp(
+    await readFile(path.join(STORAGE, 'evidence', row!.storage_path)),
+  )
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const px = (x: number, y: number) => data[(y * info.width + x) * info.channels]!;
+  expect(px(20, 50)).toBeGreaterThan(230);
+  expect(px(180, 50)).toBeLessThan(20);
+});

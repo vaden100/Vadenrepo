@@ -138,6 +138,10 @@ export const SubmitInput = z
   .strict();
 export type SubmitInput = z.infer<typeof SubmitInput>;
 
+const fraction = z.number().min(0).max(1);
+export const RedactBox = z.object({ x: fraction, y: fraction, w: fraction, h: fraction }).strict();
+export type RedactBox = z.infer<typeof RedactBox>;
+
 export const MediaRequest = z
   .object({
     mime: z.string().max(100),
@@ -148,6 +152,8 @@ export const MediaRequest = z
     redacted: z.boolean().optional(),
     /** Recorded in the story step instead of uploaded as a receipt. */
     voiceNote: z.boolean().optional(),
+    /** Areas to cover, as fractions of the image (the app's redaction tool; painted by the worker). */
+    redactBoxes: z.array(RedactBox).max(50).optional(),
   })
   .strict();
 
@@ -219,6 +225,8 @@ export const STORY_MIN = 20;
 
 /** Returned once by submit. The claim code is never shown again. */
 export interface SubmitResult {
+  /** Report id (the app stores "<id>.<claimCode>" to check status later). */
+  id: string;
   code: string;
   claimCode: string | null;
   status: string;

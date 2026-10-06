@@ -120,7 +120,10 @@ alter table public.media
   add column if not exists processed_at timestamptz,
   add column if not exists attempts int not null default 0,
   add column if not exists voice_note boolean not null default false,          -- recorded in the story step
-  add column if not exists reporter_redacted boolean not null default false;   -- reporter blurred it before upload
+  add column if not exists reporter_redacted boolean not null default false,   -- reporter covered parts before upload
+  -- Boxes (fractions of width/height) the reporter drew in the app; the worker paints them
+  -- black before anyone sees the file, then keeps only the covered version.
+  add column if not exists redact_boxes jsonb check (redact_boxes is null or jsonb_typeof(redact_boxes) = 'array');
 
 alter table public.media drop constraint if exists media_scan_status_check;
 alter table public.media add constraint media_scan_status_check

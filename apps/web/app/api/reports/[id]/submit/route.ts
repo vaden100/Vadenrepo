@@ -30,7 +30,7 @@ import {
   type ReportRow,
 } from '@/lib/server/report-access';
 import { listMedia } from '@/lib/server/reports';
-import { getSession } from '@/lib/session';
+import { caller } from '@/lib/server/caller';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,11 +85,8 @@ export const POST = handler<Ctx>('reports.submit', async (req: NextRequest, { pa
 
   const firstSubmit = r.status === 'draft';
   // Signed in during the flow (step 6 offers it): the report joins their account.
-  const session = r.reporter_id ? null : await getSession();
-  const member =
-    session?.profile?.age_confirmed_at && session.profile.terms_accepted_at
-      ? session.user.id
-      : null;
+  const who = r.reporter_id ? null : await caller(req);
+  const member = who?.onboarded ? who.userId : null;
   const reporterId = r.reporter_id ?? member;
   const anonymous = !reporterId;
   const claimCode = firstSubmit && anonymous ? formatClaimCode(randomBytes(12)) : null;
@@ -170,7 +167,7 @@ export const POST = handler<Ctx>('reports.submit', async (req: NextRequest, { pa
     files: media.length,
     resubmit: !firstSubmit,
   });
-  const res = json<SubmitResult>({ code, claimCode, status }, 201);
+  const res = json<SubmitResult>({ id: r.id, code, claimCode, status }, 201);
   res.cookies.delete(DRAFT_COOKIE);
   if (claimCode) setOwnerCookie(res, req, CLAIM_COOKIE, `${r.id}.${claimCode}`, 30);
   return res;

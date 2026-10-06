@@ -52,6 +52,23 @@ describe('images', () => {
     expect([out.width, out.height]).toEqual([64, 48]);
   });
 
+  it('paints redaction boxes black and keeps only the covered version', async () => {
+    const input = await sharp({
+      create: { width: 100, height: 50, channels: 3, background: '#ffffff' },
+    })
+      .jpeg()
+      .toBuffer();
+    const out = await cleanImage(input, 'image/jpeg', [{ x: 0.5, y: 0, w: 0.5, h: 1 }]);
+    const { data, info } = await sharp(out.data).raw().toBuffer({ resolveWithObject: true });
+    const px = (x: number, y: number) => data[(y * info.width + x) * info.channels]!;
+    expect(px(10, 25)).toBeGreaterThan(240); // left half untouched
+    expect(px(90, 25)).toBeLessThan(15); // right half covered
+    // Boxes outside the picture are clamped, not an error.
+    await expect(
+      cleanImage(input, 'image/jpeg', [{ x: 0.9, y: 0.9, w: 1, h: 1 }]),
+    ).resolves.toBeTruthy();
+  });
+
   it('perceptual hashes survive resizing and recompression', async () => {
     const a = await photoWithGps();
     const b = await sharp(a).resize(200).jpeg({ quality: 40 }).toBuffer();

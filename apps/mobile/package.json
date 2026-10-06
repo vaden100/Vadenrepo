@@ -9,7 +9,7 @@
     "android": "expo start --android",
     "build": "expo export --platform ios --platform android --output-dir dist",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"mobile: no unit tests yet (Maestro flows arrive with Phase 2)\""
+    "test": "echo \"mobile: no device tests yet (Maestro flows with Phase 7); the report API it uses is covered by e2e-stack\""
   },
   "dependencies": {
     "@expo-google-fonts/archivo": "^0.4.2",
@@ -21,9 +21,14 @@
     "@rmmm/ui": "workspace:*",
     "@supabase/supabase-js": "^2.117.2",
     "expo": "~57.0.26",
+    "expo-audio": "~57.0.5",
+    "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.20",
     "expo-crypto": "~57.0.3",
+    "expo-document-picker": "~57.0.3",
     "expo-font": "~57.0.4",
+    "expo-image-manipulator": "~57.0.20",
+    "expo-image-picker": "~57.0.20",
     "expo-linking": "~57.0.11",
     "expo-router": "~57.0.24",
     "expo-secure-store": "~57.0.4",

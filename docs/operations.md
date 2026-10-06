@@ -76,22 +76,25 @@ catch regressions.
 
 ## Retention
 
-| Data               | Kept                     | Then                                          |
-| ------------------ | ------------------------ | --------------------------------------------- |
-| Account            | until deletion requested | deleted within 30 days                        |
-| Reports + evidence | while the case is active | deleted or anonymized unless under legal hold |
-| Contact messages   | 2 years                  | deleted                                       |
-| Rate-limit buckets | 1 day idle               | pruned (`prune_rate_limits()`)                |
-| Audit log          | indefinitely             | append-only, never edited                     |
+| Data               | Kept                            | Then                                            |
+| ------------------ | ------------------------------- | ----------------------------------------------- |
+| Account            | until deletion requested        | deleted within 30 days                          |
+| Reports + evidence | while the case is active        | deleted or anonymized unless under legal hold   |
+| Abandoned drafts   | 30 days (draft cookie lifetime) | deleted with their files (cleanup job, Phase 3) |
+| Contact messages   | 2 years                         | deleted                                         |
+| Rate-limit buckets | 1 day idle                      | pruned (`prune_rate_limits()`)                  |
+| Audit log          | indefinitely                    | append-only, never edited                       |
 
 ## Third-party inventory (WBS 76, 121)
 
-| Service              | Why                                                   | Data it gets                 | Cookies                        | Consent needed   | Performance cost              |
-| -------------------- | ----------------------------------------------------- | ---------------------------- | ------------------------------ | ---------------- | ----------------------------- |
-| Supabase             | Database, auth, storage                               | Account, reports, messages   | `sb-*` session (after sign-in) | No (necessary)   | API calls only                |
-| Vercel               | Hosting                                               | Request data                 | None                           | No               | n/a                           |
-| Cloudflare Turnstile | Bot checks on sign-in and contact (when keys are set) | Browser signals              | During challenge               | No (security)    | ~1 script on those pages only |
-| Plausible            | Anonymous visit counts (when configured)              | Page, referrer, browser type | None                           | Yes, asked first | 1 small script after opt-in   |
+| Service                  | Why                                                                  | Data it gets                  | Cookies                        | Consent needed                       | Performance cost              |
+| ------------------------ | -------------------------------------------------------------------- | ----------------------------- | ------------------------------ | ------------------------------------ | ----------------------------- |
+| Supabase                 | Database, auth, storage                                              | Account, reports, messages    | `sb-*` session (after sign-in) | No (necessary)                       | API calls only                |
+| Vercel                   | Hosting                                                              | Request data                  | None                           | No                                   | n/a                           |
+| Cloudflare Turnstile     | Bot checks on sign-in, contact and report submit (when keys are set) | Browser signals               | During challenge               | No (security)                        | ~1 script on those pages only |
+| Media worker host        | Runs `apps/worker` (Fly.io or Render, chosen at deploy)              | Evidence files while cleaning | None                           | No (necessary)                       | n/a (server side)             |
+| Transcription (optional) | Voice-note text, only when `TRANSCRIBE_API_URL` is set               | Voice-note audio              | None                           | Listed on /legal/subprocessors first | n/a                           |
+| Plausible                | Anonymous visit counts (when configured)                             | Page, referrer, browser type  | None                           | Yes, asked first                     | 1 small script after opt-in   |
 
 Fonts are self-hosted. No ad, tracking, chat, map or social SDKs.
 

@@ -406,6 +406,9 @@ export const en = {
       metadataNote:
         'We remove location and camera details from every file. On this device, photos are cleaned before they leave your phone or computer; our server cleans everything again.',
       choose: 'Add files',
+      choosePhotos: 'Add photos or screenshots',
+      chooseFiles: 'Add PDF, audio or video',
+      noWebUrl: 'This build of the app is not connected to our servers yet.',
       dropHint: 'or drop them here',
       redact: 'Hide details',
       remove: 'Remove',
@@ -447,6 +450,7 @@ export const en = {
       apply: 'Use this version',
       cancel: 'Cancel',
       boxLabel: (n: number) => `Box ${n}`,
+      boxCount: (n: number) => `${n} ${n === 1 ? 'box' : 'boxes'} drawn`,
       canvasLabel: 'Image to cover. Drag to draw a box.',
       applied: 'Covered version saved.',
     },

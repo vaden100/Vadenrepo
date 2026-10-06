@@ -3,9 +3,9 @@ import type { CurrentDraft } from '@rmmm/api';
 import { handler, json } from '@/lib/api';
 import { serverEnv } from '@/lib/env';
 import { db, q } from '@/lib/server/db';
-import { DRAFT_COOKIE, parsePair, reportAccess, type ReportRow } from '@/lib/server/report-access';
+import { draftPair, reportAccess, type ReportRow } from '@/lib/server/report-access';
 import { draftView } from '@/lib/server/reports';
-import { getSession } from '@/lib/session';
+import { caller } from '@/lib/server/caller';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,17 +17,17 @@ export const GET = handler('reports.current', async (req: NextRequest) => {
   const env = serverEnv();
   if (!env.supabaseUrl || !env.serviceRoleKey)
     return json<CurrentDraft>({ available: false, draft: null });
-  const cookie = parsePair(req.cookies.get(DRAFT_COOKIE)?.value);
+  const cookie = draftPair(req);
   if (cookie) {
     const access = await reportAccess(req, cookie.id);
     if (access?.report.status === 'draft')
       return json<CurrentDraft>({ available: true, draft: await draftView(access.report) });
   }
-  const session = await getSession();
-  if (session) {
+  const who = await caller(req);
+  if (who) {
     const [row] = await db.select<ReportRow>(
       'reports',
-      `reporter_id=eq.${q(session.user.id)}&status=eq.draft&select=*&order=updated_at.desc&limit=1`,
+      `reporter_id=eq.${q(who.userId)}&status=eq.draft&select=*&order=updated_at.desc&limit=1`,
     );
     if (row) return json<CurrentDraft>({ available: true, draft: await draftView(row) });
   }

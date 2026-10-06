@@ -23,7 +23,21 @@
           "backgroundColor": "#111111"
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pick screenshots and photos to add as receipts to your report.",
+          "cameraPermission": "Take a photo of a receipt or flyer for your report."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Record a 60-second voice note for your report."
+        }
+      ],
+      "expo-document-picker"
     ],
     "experiments": {
       "typedRoutes": true

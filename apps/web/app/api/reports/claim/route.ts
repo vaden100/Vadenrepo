@@ -6,7 +6,7 @@ import { sha256Hex } from '@/lib/security/client';
 import { db, q } from '@/lib/server/db';
 import {
   CLAIM_COOKIE,
-  parsePair,
+  claimPair,
   setOwnerCookie,
   type ReportRow,
 } from '@/lib/server/report-access';
@@ -38,7 +38,7 @@ export const POST = handler('reports.claim', async (req: NextRequest) => {
 
 /** GET /api/reports/claim: status for the claim saved in this browser ({ report: null } if none). */
 export const GET = handler('reports.claim.status', async (req: NextRequest) => {
-  const pair = parsePair(req.cookies.get(CLAIM_COOKIE)?.value);
+  const pair = claimPair(req);
   const env = serverEnv();
   if (!pair || !env.supabaseUrl || !env.serviceRoleKey) return json({ report: null });
   const [row] = await db.select<ReportRow>('reports', `id=eq.${q(pair.id)}&select=*`);

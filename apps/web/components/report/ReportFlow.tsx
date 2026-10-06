@@ -133,7 +133,9 @@ export function ReportFlow({ member }: { member: { name: string } | null }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const dirty = useRef(false);
   const draftRef = useRef<ReportDraftView | null>(null);
-  draftRef.current = draft;
+  useEffect(() => {
+    draftRef.current = draft;
+  }, [draft]);
 
   const load = useCallback((d: ReportDraftView) => {
     setDraft(d);
@@ -184,6 +186,7 @@ export function ReportFlow({ member }: { member: { name: string } | null }) {
       return null;
     }
     track('form_started', { form: 'report' });
+    draftRef.current = r.data;
     setDraft(r.data);
     return r.data;
   }, [category]);

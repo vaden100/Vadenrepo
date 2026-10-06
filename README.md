@@ -18,7 +18,7 @@ cases, watch the episodes.
 apps/web         Next.js 16 (App Router, React 19). Public site, account, API route handlers.
                  proxy.ts: request id, IP/device bans, rate limits, nonce CSP, security headers.
 apps/mobile      Expo SDK 57 + Expo Router (iOS/Android).
-apps/worker      Node media pipeline (Phase 2).
+apps/worker      Node media pipeline: cleans every uploaded file (scan, metadata strip, hashes, OCR).
 packages/tokens  Design tokens → CSS variables + React Native values. WCAG contrast tests.
 packages/ui      Shared UI: strings (i18n), web components + styles.css, React Native components.
 packages/api     Shared zod contracts (enums, auth, website API).

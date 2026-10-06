@@ -4,7 +4,7 @@ import { scan } from './clamav.js';
 import type { WorkerConfig } from './config.js';
 import type { Db } from './db.js';
 import { dhash, phash, sha256 } from './hash.js';
-import { cleanImage } from './image.js';
+import { cleanImage, type Box } from './image.js';
 import { log } from './log.js';
 import { cleanPdf } from './pdf.js';
 import { sniff, type Kind } from './sniff.js';
@@ -20,6 +20,7 @@ export interface MediaJob {
   bytes: number | null;
   duration_ms: number | null;
   voice_note: boolean;
+  redact_boxes: Box[] | null;
   attempts: number;
 }
 
@@ -71,7 +72,7 @@ export async function processJob(
     let outMime = mime;
 
     if (job.kind === 'image') {
-      const img = await cleanImage(raw, mime);
+      const img = await cleanImage(raw, mime, job.redact_boxes ?? []);
       cleaned = img.data;
       outMime = img.mime;
       Object.assign(patch, {
