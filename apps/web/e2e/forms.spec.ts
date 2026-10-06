@@ -77,15 +77,19 @@ test('real server without a database answers 503 and the UI explains it', async 
   );
 });
 
-test('the API refuses cross-site posts and invalid bodies', async ({ request }) => {
+test('the API refuses cross-site posts and invalid bodies', async ({ request }, info) => {
+  // Its own IP per project, so other contact tests cannot use up its rate-limit bucket.
+  const ip = {
+    'x-forwarded-for': `198.18.1.${10 + info.parallelIndex + (info.project.name === 'mobile' ? 50 : 0)}`,
+  };
   const cross = await request.post('/api/contact', {
-    headers: { origin: 'https://evil.example', 'sec-fetch-site': 'cross-site' },
+    headers: { ...ip, origin: 'https://evil.example', 'sec-fetch-site': 'cross-site' },
     data: {},
   });
   expect(cross.status()).toBe(403);
-  const bad = await request.post('/api/contact', { data: { reason: 'nope' } });
-  expect([422, 429]).toContain(bad.status());
-  if (bad.status() === 422) expect((await bad.json()).fields).toHaveProperty('reason');
+  const bad = await request.post('/api/contact', { headers: ip, data: { reason: 'nope' } });
+  expect(bad.status()).toBe(422);
+  expect((await bad.json()).fields).toHaveProperty('reason');
 });
 
 test('honeypot submissions are swallowed', async ({ request }) => {

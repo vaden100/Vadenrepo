@@ -8,6 +8,7 @@
 @import '@rmmm/ui/web/styles.css';
 @import '../components/content/content.css';
 @import '../components/report/report.css';
+@import '../components/admin/admin.css';
 
 /* ---------- Base ---------- */
 *,

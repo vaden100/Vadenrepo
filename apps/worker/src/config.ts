@@ -1,3 +1,6 @@
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
 /** Worker env. The service-role key lives ONLY here and in server functions (SPEC 11). */
 export interface WorkerConfig {
   port: number;
@@ -26,7 +29,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): WorkerConfig {
         : hasServiceRole
           ? 'supabase'
           : 'local',
-    storageLocalDir: env.STORAGE_LOCAL_DIR || '.data/storage',
+    storageLocalDir: env.STORAGE_LOCAL_DIR || join(tmpdir(), 'rmmm-storage'),
     pollMs: Math.max(250, Number(env.POLL_MS ?? 3000)),
     batch: Math.min(20, Math.max(1, Number(env.BATCH ?? 4))),
     clamav: env.CLAMAV_HOST

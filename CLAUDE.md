@@ -7,9 +7,10 @@ are working on before changing anything.
 ## How we build
 
 - One phase at a time (SPEC 16). A phase is done only when its acceptance checks pass.
-- Current status: **Phase 2 done** (submit a story: `/report` on web, Report tab in the app,
-  `apps/worker` media pipeline), on top of Phase 1 and the Website Build Spec
-  (`docs/website-foundations.md`, audit in `docs/self-audit.md`). Next: Phase 3 (admin console).
+- Current status: **Phase 3 done** (admin console at `/admin`: queue, report review with
+  evidence viewer and redaction, entities with two-person approval, merge and link graph, flags
+  with 24-hour timers, disputes inbox, bans, audit log), on top of Phases 1 and 2 and the Website
+  Build Spec (`docs/website-foundations.md`, audit in `docs/self-audit.md`). Next: Phase 4 (deep search).
 - Website criteria that conflict with SPEC.md are decided in `docs/website-foundations.md`
   section 17. SPEC.md wins.
 
@@ -91,6 +92,16 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
   in `apps/web/lib/security/rate-limit.ts`), then session refresh. Add a rule for every new
   mutating API route. Lookups fail open; Postgres re-checks bans on writes.
 - `supabase/pgtap/setup/supabase_shim.sql` is for local tests only. Never run it on Supabase.
+
+**Admin console (SPEC 3, 5, 10)**
+
+- Admin pages call `requireStaff()`, admin routes use `adminRoute()` (`lib/admin/`). Both act with the
+  staff member's own Supabase session, never the service role, so RLS applies and the audit
+  trigger records who did it. Non-staff get a 404.
+- Approvals only through `approve_entity()`; `entities.approved_by` is a read-only mirror. The
+  publish guard counts `entity_approvals` rows (moderator + editor, two different people).
+- Staff never see a reporter's IP or device hash (column grants). Bans from a report go through
+  `ban_report_source()` (admins only).
 
 **Reports and evidence (SPEC 4.1, 6, 11)**
 

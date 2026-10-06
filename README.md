@@ -15,7 +15,7 @@ cases, watch the episodes.
 ## Architecture
 
 ```
-apps/web         Next.js 16 (App Router, React 19). Public site, account, API route handlers.
+apps/web         Next.js 16 (App Router, React 19). Public site, account, admin console (/admin), API.
                  proxy.ts: request id, IP/device bans, rate limits, nonce CSP, security headers.
 apps/mobile      Expo SDK 57 + Expo Router (iOS/Android).
 apps/worker      Node media pipeline: cleans every uploaded file (scan, metadata strip, hashes, OCR).

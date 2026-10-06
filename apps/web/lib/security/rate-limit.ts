@@ -49,6 +49,13 @@ export const RATE_RULES: readonly RateRule[] = [
     refillPerMinute: 30 / 60,
   },
   {
+    name: 'admin',
+    match: /^\/api\/admin\//,
+    methods: ['POST', 'PATCH', 'DELETE'],
+    capacity: 120,
+    refillPerMinute: 120,
+  },
+  {
     name: 'auth',
     match: /^\/(api\/)?auth(\/|$)/,
     methods: ['POST'],

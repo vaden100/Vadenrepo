@@ -1,0 +1,227 @@
+/* ---------- Admin console (SPEC 5 admin) ---------- */
+.admin-shell {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-6) var(--space-12);
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .admin-shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.admin-main {
+  min-width: 0;
+}
+.admin-main h1 {
+  margin: 0;
+}
+.admin-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+@media (min-width: 1024px) {
+  .admin-nav ul {
+    flex-direction: column;
+  }
+}
+.admin-nav a {
+  display: inline-block;
+  padding: var(--space-2) 0;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.admin-nav a[aria-current='page'] {
+  border-bottom-color: var(--color-accent);
+}
+.admin-nav a:hover {
+  text-decoration: underline;
+}
+.admin-nav__who {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.admin-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.admin-tile {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.admin-tile:hover {
+  border-color: var(--color-text);
+}
+.admin-tile__n {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+}
+.admin-alerts,
+.admin-list,
+.admin-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.admin-alerts li,
+.admin-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-wrap: anywhere;
+}
+.admin-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.admin-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.admin-tabs a {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.admin-tabs a[aria-current='page'] {
+  border-color: var(--color-text);
+  font-weight: 600;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+.admin-table th {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+.admin-columns {
+  display: grid;
+  gap: var(--space-8);
+  min-width: 0;
+}
+@media (min-width: 1200px) {
+  .admin-columns {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+.pill {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+.pill--alert {
+  border-color: var(--color-warning);
+}
+.deadline {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.deadline[data-overdue] {
+  color: var(--color-danger, var(--color-text));
+  text-decoration: underline;
+}
+.row--end {
+  align-items: flex-end;
+}
+.pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+.evidence {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-6);
+}
+.evidence__item {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.evidence__item p {
+  margin: 0;
+}
+.evidence__img {
+  max-width: 100%;
+  max-height: 480px;
+  width: auto;
+  height: auto;
+  border: 1px solid var(--color-border);
+  justify-self: start;
+}
+.link-graph {
+  margin: 0;
+  max-width: 420px;
+}
+.link-graph__svg {
+  width: 100%;
+  height: auto;
+}
+.link-graph__edge {
+  stroke: var(--color-text-secondary);
+  stroke-width: 2;
+}
+.link-graph__node {
+  fill: var(--color-surface);
+  stroke: var(--color-border);
+}
+.link-graph__node--main {
+  stroke: var(--color-text);
+  stroke-width: 2;
+}
+.link-graph__text,
+.link-graph__label {
+  fill: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.mfa-qr {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+}

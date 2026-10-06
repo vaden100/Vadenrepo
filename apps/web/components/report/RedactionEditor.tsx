@@ -33,7 +33,8 @@ export function RedactionEditor({
   file: Blob | null;
   open: boolean;
   onClose: () => void;
-  onApply: (blob: Blob) => void;
+  /** The covered image, plus the boxes as fractions of width/height (staff save boxes server-side). */
+  onApply: (blob: Blob, boxes: { x: number; y: number; w: number; h: number }[]) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [bmp, setBmp] = useState<ImageBitmap | null>(null);
@@ -179,7 +180,17 @@ export function RedactionEditor({
     ctx.fillStyle = colors.ink;
     for (const b of boxes) ctx.fillRect(b.x, b.y, b.w, b.h);
     const blob = await new Promise<Blob | null>((r) => c.toBlob(r, 'image/jpeg', 0.92));
-    if (blob) onApply(blob);
+    if (blob && bmp) {
+      onApply(
+        blob,
+        boxes.map((b) => ({
+          x: b.x / bmp.width,
+          y: b.y / bmp.height,
+          w: b.w / bmp.width,
+          h: b.h / bmp.height,
+        })),
+      );
+    }
   };
 
   return (

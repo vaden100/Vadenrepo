@@ -9,7 +9,7 @@ import {
   normalizePhone,
 } from '@rmmm/search-core';
 
-type IdentType =
+export type IdentType =
   | 'name'
   | 'handle_ig'
   | 'handle_tiktok'
@@ -21,7 +21,9 @@ type IdentType =
   | 'paypal'
   | 'phone'
   | 'email'
-  | 'domain';
+  | 'domain'
+  | 'url'
+  | 'address';
 
 export interface IdentifierRow {
   field: keyof WhoStep;
@@ -102,4 +104,59 @@ export function identifiersFromWho(who: Partial<WhoStep>): IdentifierRow[] {
     );
   }
   return rows;
+}
+
+/** One identifier typed by staff, normalized the same way as report identifiers. */
+export function normalizeIdentifier(
+  type: IdentType,
+  value: string,
+): { norm: string; norm_loose: string | null } | null {
+  const v = value.trim();
+  let norm: string | null = null;
+  let loose: string | null = null;
+  switch (type) {
+    case 'name':
+      norm = normalizeName(v);
+      break;
+    case 'handle_ig':
+    case 'handle_tiktok':
+    case 'handle_fb':
+    case 'handle_x':
+      norm = normalizeHandle(v);
+      loose = norm ? looseHandle(norm) : null;
+      break;
+    case 'cashtag':
+      norm = normalizeCashtag(v);
+      break;
+    case 'phone':
+      norm = normalizePhone(v);
+      break;
+    case 'email':
+      norm = isEmail(v) ? normalizeEmail(v) : null;
+      break;
+    case 'domain':
+      norm = normalizeDomain(v);
+      break;
+    case 'zelle':
+    case 'paypal':
+      norm = isEmail(v)
+        ? normalizeEmail(v)
+        : (normalizePhone(v) ?? v.replace(/^@/, '').toLowerCase());
+      break;
+    case 'venmo':
+      norm = v.replace(/^@/, '').toLowerCase();
+      break;
+    case 'url':
+      norm = /^https?:\/\/\S+$/i.test(v)
+        ? v
+            .replace(/[?#].*$/, '')
+            .replace(/\/$/, '')
+            .toLowerCase()
+        : null;
+      break;
+    case 'address':
+      norm = normalizeName(v);
+      break;
+  }
+  return norm ? { norm: norm.slice(0, 300), norm_loose: loose } : null;
 }

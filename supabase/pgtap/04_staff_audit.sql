@@ -1,6 +1,6 @@
 -- SPEC 11: every staff write creates an audit row; the audit log is immutable.
 begin;
-select plan(14);
+select plan(15);
 
 select tests.create_user('admin') as admin \gset
 select tests.create_user('moderator') as moderator \gset
@@ -35,7 +35,9 @@ select is(
 );
 
 select tests.as_user(:'moderator', 'aal2');
-update public.reports set story = 'moderator edit' where id = '00000000-0000-0000-0000-0000000000d1';
+select throws_ok(
+  $$ update public.reports set story = 'moderator edit' where id = '00000000-0000-0000-0000-0000000000d1' $$,
+  '42501', null, 'staff cannot rewrite what the reporter said');
 select tests.as_postgres();
 select is(
   (select count(*) from public.audit_log where meta::text like '%secret story text%' or meta::text like '%moderator edit%'),

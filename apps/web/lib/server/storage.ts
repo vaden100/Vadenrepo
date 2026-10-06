@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { serverEnv } from '@/lib/env';
 
@@ -24,9 +25,11 @@ export function storageDriver(): StorageDriver {
   return serverEnv().serviceRoleKey ? 'supabase' : 'local';
 }
 
+/** Local driver folder. Defaults to the OS temp dir (shared with the worker's default). */
 export function localDir(): string {
   return path.resolve(
-    process.env.STORAGE_LOCAL_DIR || path.join(process.cwd(), '.data', 'storage'),
+    /* turbopackIgnore: true */ process.env.STORAGE_LOCAL_DIR ||
+      path.join(tmpdir(), 'rmmm-storage'),
   );
 }
 
@@ -202,4 +205,40 @@ export async function deleteObject(key: string) {
     body: JSON.stringify({ prefixes: [key] }),
     signal: AbortSignal.timeout(8000),
   });
+}
+
+/** Server-side read (staff evidence viewer). Never hand storage URLs for originals to browsers. */
+export async function readObject(key: string): Promise<Buffer | null> {
+  if (storageDriver() === 'local') {
+    const { readFile } = await import('node:fs/promises');
+    const file = path.join(localDir(), BUCKET, key);
+    if (!file.startsWith(path.join(localDir(), BUCKET) + path.sep)) return null;
+    return readFile(file).catch(() => null);
+  }
+  const { supabaseUrl, serviceRoleKey } = serverEnv();
+  const res = await fetch(
+    `${supabaseUrl!.replace(/\/$/, '')}/storage/v1/object/authenticated/${BUCKET}/${key}`,
+    {
+      headers: { apikey: serviceRoleKey!, authorization: `Bearer ${serviceRoleKey}` },
+      signal: AbortSignal.timeout(60_000),
+    },
+  );
+  return res.ok ? Buffer.from(await res.arrayBuffer()) : null;
+}
+
+export async function writeObject(key: string, data: Uint8Array, mime: string): Promise<void> {
+  if (storageDriver() === 'local') return writeLocalObject(key, data);
+  const { supabaseUrl, serviceRoleKey } = serverEnv();
+  const res = await fetch(`${supabaseUrl!.replace(/\/$/, '')}/storage/v1/object/${BUCKET}/${key}`, {
+    method: 'PUT',
+    headers: {
+      apikey: serviceRoleKey!,
+      authorization: `Bearer ${serviceRoleKey}`,
+      'content-type': mime,
+      'x-upsert': 'true',
+    },
+    body: new Blob([new Uint8Array(data)], { type: mime }),
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!res.ok) throw new Error(`storage write failed: ${res.status}`);
 }

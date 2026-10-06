@@ -98,6 +98,20 @@ catch regressions.
 
 Fonts are self-hosted. No ad, tracking, chat, map or social SDKs.
 
+## Staff accounts and the admin console
+
+- Staff sign in like everyone else, then enroll an authenticator app at `/admin/mfa`. Every
+  sign-in needs the second step (aal2); Postgres refuses staff actions without it.
+- Make someone staff (admin only, in the Supabase SQL editor; there is no UI for roles on
+  purpose): `update public.profiles set role = 'moderator' where id = '<user id>';`
+  Roles: `moderator` (queue, redaction, entities), `editor` (approvals, cases and episodes later),
+  `admin` (everything, plus bans, legal holds and the audit log).
+- Optional: `ADMIN_IP_ALLOWLIST` (comma-separated IPs or IPv4 ranges) hides `/admin` and
+  `/api/admin/*` from every other address.
+- Bans apply on the next request. Each web instance caches "not banned" answers for
+  `BAN_CACHE_TTL_MS` (default 5 s); writes are re-checked in Postgres regardless.
+- Watch: flags past 24 hours and disputes past 7 days (both shown on the admin dashboard).
+
 ## Change management
 
 - Dependencies: Renovate/Dependabot weekly; `pnpm audit` blocks high/critical in CI.

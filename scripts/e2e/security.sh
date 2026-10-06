@@ -45,12 +45,14 @@ node "$ROOT/scripts/e2e/gateway.mjs" &
 pids+=($!)
 
 export SERVICE_KEY="$(node "$ROOT/scripts/e2e/jwt.mjs" '{"role":"service_role"}')"
+export ANON_KEY="$(node "$ROOT/scripts/e2e/jwt.mjs" '{"role":"anon"}')"
 if [ ! -f "$ROOT/apps/web/.next/BUILD_ID" ] || [ "${E2E_REBUILD:-0}" = "1" ]; then
   pnpm --dir "$ROOT/apps/web" build >/dev/null
 fi
 (
   cd "$ROOT/apps/web"
-  SUPABASE_URL="$SUPABASE_URL" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_KEY" BAN_CACHE_TTL_MS=0 PORT=$WEB_PORT \
+  SUPABASE_URL="$SUPABASE_URL" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_KEY" SUPABASE_ANON_KEY="$ANON_KEY" \
+  BAN_CACHE_TTL_MS=0 PORT=$WEB_PORT \
     exec pnpm exec next start -H 127.0.0.1 >"${TMPDIR:-/tmp}/rmmm-next.log" 2>&1
 ) &
 pids+=($!)

@@ -17,9 +17,9 @@ Test names: `smoke`, `a11y`, `keyboard`, `forms`, `privacy`, `errors`, `lookup`,
 
 | Status  | Count                                                                               |
 | ------- | ----------------------------------------------------------------------------------- |
-| Met     | 116 (4 of them with a launch follow-up: 22, 32, 33, 104, 145 note the pending part) |
+| Met     | 117 (4 of them with a launch follow-up: 22, 32, 33, 104, 145 note the pending part) |
 | Partial | 14                                                                                  |
-| Pending | 9                                                                                   |
+| Pending | 8                                                                                   |
 | N/A     | 11                                                                                  |
 
 Last full run: 221 Playwright tests (Chromium desktop + mobile; 202 run, 19 skipped by
@@ -86,7 +86,7 @@ tests, lint/format/typecheck clean, production builds for web, mobile and worker
 | 54  | Component architecture                    | Met           | `packages/ui` primitives + `apps/web/components/{shell,content,forms,auth}`                                                                                                                    |
 | 55  | Content separate from presentation        | Partial       | Legal, guides, about in `content/`; some page headings/intro copy still in page files                                                                                                          |
 | 56  | CMS                                       | Partial       | Legal/guides are code-managed content; cases/episodes/entities get the admin CMS in SPEC Phase 3                                                                                               |
-| 57  | Admin experience                          | Pending       | SPEC Phase 3 (2FA-only; DB permissions and audit already enforced)                                                                                                                             |
+| 57  | Admin experience                          | Met           | `/admin` (SPEC Phase 3): staff + 2FA only, queue, review, two-person approval, flags with 24-hour timers, disputes, bans, audit log; acceptance in `e2e-stack/admin.spec.ts`                   |
 | 58  | Role-based access server-side             | Met           | RLS + `private.is_*()` requiring 2FA; `pgTAP`, `stack`                                                                                                                                         |
 | 59  | Spam protection                           | Met           | Rate limits, honeypot, server validation, Turnstile when configured; `forms`, `stack`                                                                                                          |
 | 60  | Email templates                           | Pending       | Provider arrives SPEC Phase 6; Supabase auth emails customized at project setup                                                                                                                |
