@@ -5,3 +5,4 @@ node_modules
 dist
 SPEC.md
 packages/ui/src/icons/generated.ts
+apps/web/next-env.d.ts
