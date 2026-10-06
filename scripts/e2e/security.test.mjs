@@ -21,17 +21,22 @@ const psql = (sql) =>
     encoding: 'utf8',
   }).trim();
 
-/** Every route the build produced: app routes (dynamic segments expanded), API, public files, a static chunk. */
-function allRoutes() {
+const get = (route, ip, method = 'GET') =>
+  fetch(WEB + route, { method, redirect: 'manual', headers: { 'x-forwarded-for': ip } });
+
+/**
+ * Every route: app routes from the build manifest, dynamic pages expanded through the live
+ * sitemap, every public file, a static chunk and a page that does not exist.
+ */
+async function allRoutes() {
   const next = path.join(ROOT, 'apps/web/.next');
   const appRoutes = Object.values(
     JSON.parse(fs.readFileSync(path.join(next, 'app-path-routes-manifest.json'), 'utf8')),
   );
-  const prerendered = Object.keys(
-    JSON.parse(fs.readFileSync(path.join(next, 'prerender-manifest.json'), 'utf8')).routes,
-  );
-  const routes = new Set(prerendered.filter((r) => !r.startsWith('/_')));
+  const routes = new Set();
   for (const r of appRoutes) if (!r.includes('[') && !r.startsWith('/_')) routes.add(r);
+  const sitemap = await (await get('/sitemap.xml', CLEAN)).text();
+  for (const m of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) routes.add(new URL(m[1]).pathname);
   const pub = path.join(ROOT, 'apps/web/public');
   const walk = (d) =>
     fs.readdirSync(d, { withFileTypes: true }).forEach((e) => {
@@ -46,11 +51,8 @@ function allRoutes() {
   return [...routes].sort();
 }
 
-const get = (route, ip, method = 'GET') =>
-  fetch(WEB + route, { method, redirect: 'manual', headers: { 'x-forwarded-for': ip } });
-
 test('banned IP gets 403 on every route; others do not', async () => {
-  const routes = allRoutes();
+  const routes = await allRoutes();
   assert.ok(routes.length > 20, `expected many routes, got ${routes.length}`);
   assert.ok(
     routes.includes('/api/health') &&
@@ -154,4 +156,47 @@ test('anon API key cannot read private tables or call service RPCs', async () =>
     body: JSON.stringify({ ip: '1.1.1.1' }),
   });
   assert.ok([401, 403, 404].includes(rpc.status), `is_banned as anon -> ${rpc.status}`);
+});
+
+test('contact form round trip: validated, rate limited, stored with hashes only', async () => {
+  psql(
+    `delete from public.ip_bans; delete from public.rate_limits; delete from public.contact_messages;`,
+  );
+  const ip = '198.18.9.9';
+  const post = (body, headers = {}) =>
+    fetch(`${WEB}/api/contact`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-forwarded-for': ip, ...headers },
+      body: JSON.stringify(body),
+    });
+  const good = {
+    reason: 'press',
+    name: 'Dee Demo',
+    email: 'dee@example.demo',
+    message: 'Hello team, this is a real test message.',
+  };
+
+  const bad = await post({ ...good, email: 'nope' });
+  assert.equal(bad.status, 422);
+  assert.deepEqual(Object.keys((await bad.json()).fields), ['email']);
+
+  const cross = await post(good, {
+    origin: 'https://evil.example',
+    'sec-fetch-site': 'cross-site',
+  });
+  assert.equal(cross.status, 403);
+
+  const ok = await post(good);
+  assert.equal(ok.status, 201);
+  const { ref } = await ok.json();
+  assert.match(ref, /^[0-9A-F]{8}$/);
+  const row = psql(
+    `select reason || '|' || (ip_hash ~ '^[0-9a-f]{64}$') || '|' || (ip_hash <> '${ip}') from public.contact_messages where public_ref = '${ref}'`,
+  );
+  assert.equal(row, 'press|true|true', 'stored with a hashed IP, never the raw IP');
+
+  // 5 per hour per IP: the bucket is now at 2 used (422 and 201; the 403 was refused before it).
+  let last;
+  for (let i = 0; i < 5; i++) last = await post(good);
+  assert.equal(last.status, 429);
 });

@@ -4,9 +4,8 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { isAdult, TERMS_VERSION } from '@rmmm/api';
-import { Button, en } from '@rmmm/ui/web';
+import { Button, Checkbox, EmptyState, en, StatusMessage, TextField } from '@rmmm/ui/web';
 import { supabaseBrowser } from '@/lib/supabase/browser';
-import s from './forms.module.css';
 
 /** SPEC 12 age gate + terms. Neutral date entry; the date itself is never stored. */
 export function OnboardingForm({ next = '/account' }: { next?: string }) {
@@ -14,23 +13,27 @@ export function OnboardingForm({ next = '/account' }: { next?: string }) {
   const [birth, setBirth] = useState('');
   const [terms, setTerms] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
+  const [termsError, setTermsError] = useState<string | null>(null);
+  const [failure, setFailure] = useState<string | null>(null);
   const [under18, setUnder18] = useState(false);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    setError(null);
+    if (busy) return;
     const adult = isAdult(birth);
-    if (adult === null) return setError(en.onboarding.invalidDate);
-    if (!terms) return setError(en.onboarding.termsRequired);
+    setDateError(adult === null ? en.onboarding.invalidDate : null);
+    setTermsError(terms ? null : en.onboarding.termsRequired);
+    setFailure(null);
+    if (adult === null || !terms) return;
     const supabase = supabaseBrowser();
-    if (!supabase) return setError(en.auth.notConfigured);
+    if (!supabase) return setFailure(en.auth.notConfigured);
 
     setBusy(true);
     const { data: ok, error: ageErr } = await supabase.rpc('confirm_age', { birth_date: birth });
     if (ageErr) {
       setBusy(false);
-      return setError(en.common.tryAgain);
+      return setFailure(en.common.tryAgain);
     }
     if (ok === false || adult === false) {
       await supabase.auth.signOut();
@@ -39,59 +42,47 @@ export function OnboardingForm({ next = '/account' }: { next?: string }) {
     }
     const { error: termsErr } = await supabase.rpc('accept_terms', { version: TERMS_VERSION });
     setBusy(false);
-    if (termsErr) return setError(en.common.tryAgain);
+    if (termsErr) return setFailure(en.common.tryAgain);
     router.replace(next);
     router.refresh();
   }
 
   if (under18) {
     return (
-      <section role="alert">
-        <h2 className="h2">{en.onboarding.under18Title}</h2>
-        <p className="lede">{en.onboarding.under18Body}</p>
-      </section>
+      <EmptyState
+        title={en.onboarding.under18Title}
+        action={<Link href="/resources">{en.nav.resources}</Link>}
+      >
+        <p>{en.onboarding.under18Body}</p>
+      </EmptyState>
     );
   }
 
   return (
-    <form className={s.form} onSubmit={submit} noValidate>
-      <div className={s.field}>
-        <label className={s.label} htmlFor="dob">
-          {en.onboarding.birthDateLabel}
-        </label>
-        <input
-          id="dob"
-          type="date"
-          className={s.input}
-          value={birth}
-          onChange={(e) => setBirth(e.target.value)}
-          aria-describedby="dob-hint"
-          required
-        />
-        <p id="dob-hint" className={s.hint}>
-          {en.onboarding.birthDateHint}
-        </p>
+    <form className="stack form" onSubmit={submit} noValidate>
+      {failure && <StatusMessage tone="error" title={failure} />}
+      <TextField
+        type="date"
+        label={en.onboarding.birthDateLabel}
+        description={en.onboarding.birthDateHint}
+        autoComplete="bday"
+        value={birth}
+        onChange={(e) => setBirth(e.target.value)}
+        error={dateError}
+        required
+      />
+      <Checkbox
+        label={en.onboarding.termsLabel}
+        description={<Link href="/legal/terms">{en.onboarding.termsLinks}</Link>}
+        checked={terms}
+        onChange={(e) => setTerms(e.target.checked)}
+        error={termsError}
+      />
+      <div>
+        <Button type="submit" loading={busy} loadingLabel={en.forms.sending}>
+          {en.onboarding.submit}
+        </Button>
       </div>
-      <label className={s.check}>
-        <input
-          type="checkbox"
-          checked={terms}
-          onChange={(e) => setTerms(e.target.checked)}
-          required
-        />
-        <span>{en.onboarding.termsLabel}</span>
-      </label>
-      <p className={s.hint}>
-        <Link href="/legal/terms">{en.onboarding.termsLinks}</Link>
-      </p>
-      {error && (
-        <p className={s.error} role="alert">
-          {error}
-        </p>
-      )}
-      <Button type="submit" loading={busy}>
-        {en.onboarding.submit}
-      </Button>
     </form>
   );
 }

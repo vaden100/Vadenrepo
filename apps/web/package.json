@@ -7,22 +7,28 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "build:e2e": "NEXT_PUBLIC_SITE_URL=http://127.0.0.1:3400 NEXT_PUBLIC_ANALYTICS_HOST=plausible.io NEXT_PUBLIC_ANALYTICS_DOMAIN=rmmm.test next build"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/ibm-plex-sans": "^5.3.0",
     "@rmmm/api": "workspace:*",
+    "@rmmm/search-core": "workspace:*",
     "@rmmm/tokens": "workspace:*",
     "@rmmm/ui": "workspace:*",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.8",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "@supabase/ssr": "^0.12.7",
-    "@supabase/supabase-js": "^2.117.2"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.55.0",
     "@types/react": "~19.2.0",
     "@types/react-dom": "~19.2.0",
     "vitest": "^3.2.0"

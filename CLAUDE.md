@@ -7,9 +7,12 @@ are working on before changing anything.
 ## How we build
 
 - One phase at a time (SPEC 16). A phase is done only when its acceptance checks pass.
-- Current status: **Phase 1 done** (schema + RLS, roles with 2FA for staff, audit log,
-  IP/device bans, rate limiter, OTP sign-in, 18+ age gate and terms on web and mobile).
-  Next: Phase 2 (submit a story).
+- Current status: **Phase 1 done**, plus the website raised to the Website Build Spec
+  (`docs/website-foundations.md`, audit in `docs/self-audit.md`): nonce CSP, theme engine,
+  shell (nav, mobile menu, command palette), content pages, contact/consent/deletion flows,
+  SEO, Playwright + axe suites. Next: Phase 2 (submit a story).
+- Website criteria that conflict with SPEC.md are decided in `docs/website-foundations.md`
+  section 17. SPEC.md wins.
 
 ## Layout
 
@@ -38,6 +41,7 @@ pnpm check              # lint, format, typecheck, unit tests, brand sync, copy 
 pnpm build              # web (next build), mobile (expo export JS bundles), worker (tsc)
 pnpm test:db            # pgTAP suite on a throwaway Postgres 16 (needs pgvector + pgTAP)
 pnpm test:e2e:security  # Postgres + PostgREST + next start: bans, rate limits, audit, RLS over HTTP
+pnpm --filter @rmmm/web build:e2e && pnpm --filter @rmmm/web test:e2e   # Playwright + axe
 ```
 
 Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm audit`.
@@ -46,7 +50,8 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
 
 **Copy (SPEC 14, enforced by `pnpm copy:check` and ui tests)**
 
-- UI strings live in `packages/ui/src/shared/strings.en.ts` (i18n-ready). No hardcoded copy in components.
+- UI strings live in `packages/ui/src/shared/strings.en.ts` (i18n-ready). No hardcoded copy in
+  components. Long-form page content lives in `apps/web/content/*` (legal, guides, about).
 - No em dashes, no emojis in UI.
 - Never "scammer" or "fraud" as fact about a named party. Use "reported", "alleged", "under review".
 - Data about named parties is neutral: "6 reports, 4 reviewed." Street voice is for marketing only.
@@ -61,6 +66,18 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
 - The wordmark is an image, never live text.
 - Every text/background pair must pass WCAG AA. Add new pairs to `packages/tokens/src/contrast.test.ts`.
   `statusResolvedText` exists because paper on the spec's `statusResolved` is 4.37:1.
+
+**Website (docs/website-foundations.md)**
+
+- Pages: unique title + description via `pageMetadata()`, breadcrumbs via `PageHead`, one `<h1>`.
+  Add new public pages to `app/sitemap.ts`, `lib/site.ts` (palette) and `e2e/helpers.ts`.
+- Use the shared form components (`TextField`, `SelectField`, `Checkbox`, `RadioGroup`) and
+  `postJson()`; never report success before the server confirms.
+- Scripts need the CSP nonce (`getNonce()`); never add `'unsafe-inline'` to `script-src`.
+- New third party: CSP in `lib/security/headers.ts`, `/legal/subprocessors`, consent category,
+  and the inventory in `docs/operations.md`, in the same PR.
+- Every page must pass the Playwright suite: axe in both themes, no console errors, no
+  horizontal overflow at 320px. Update visual baselines on purpose and review the diff.
 
 **Database and security (SPEC 7, 9, 11)**
 

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { describe, expect, it, vi } from 'vitest';
 import { StaticBanStore, type BanStore } from './bans';
 import { clientIp, deviceHash, DEVICE_COOKIE, DEVICE_HEADER } from './client';
+import { buildCsp } from './headers';
 import { createSecurityProxy } from './proxy';
 import { MemoryRateLimiter, ruleFor } from './rate-limit';
 import { TtlCache } from './ttl-cache';
@@ -175,5 +176,70 @@ describe('TtlCache', () => {
     const off = new TtlCache<boolean>(0);
     off.set('a', true);
     expect(off.get('a')).toBeUndefined();
+  });
+});
+
+describe('CSP and security headers', () => {
+  it('production scripts need the nonce: no unsafe-inline, no unsafe-eval', () => {
+    const csp = buildCsp({ nonce: 'abc', dev: false });
+    const script = csp.split('; ').find((d) => d.startsWith('script-src'))!;
+    expect(script).toContain("'nonce-abc'");
+    expect(script).toContain("'strict-dynamic'");
+    expect(script).not.toContain('unsafe-inline');
+    expect(script).not.toContain('unsafe-eval');
+    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain('upgrade-insecure-requests');
+  });
+  it('adds only the third parties that are configured', () => {
+    const csp = buildCsp({
+      nonce: 'n',
+      dev: false,
+      supabaseUrl: 'https://x.supabase.co/rest',
+      turnstile: true,
+      analyticsHost: 'plausible.io',
+    });
+    expect(csp).toContain(
+      "connect-src 'self' https://x.supabase.co wss://x.supabase.co https://plausible.io",
+    );
+    expect(csp).toContain("frame-src 'self' https://challenges.cloudflare.com");
+    expect(buildCsp({ nonce: 'n', dev: false })).not.toContain('cloudflare');
+  });
+
+  it('every response carries headers, CSP with a fresh nonce, request id; private pages are no-store', async () => {
+    const p = createSecurityProxy({
+      bans: null,
+      limiter: null,
+      clientIpHeader: 'x-forwarded-for',
+      dev: false,
+      csp: { dev: false },
+    });
+    const a = await p(req('/', { ip: '1.1.1.1' }));
+    const b = await p(req('/', { ip: '1.1.1.1' }));
+    const nonce = (r: Response) =>
+      /'nonce-([^']+)'/.exec(r.headers.get('content-security-policy') ?? '')?.[1];
+    expect(nonce(a)).toBeTruthy();
+    expect(nonce(a)).not.toBe(nonce(b));
+    expect(a.headers.get('strict-transport-security')).toContain('max-age=63072000');
+    expect(a.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(a.headers.get('permissions-policy')).toContain('geolocation=()');
+    expect(a.headers.get('x-request-id')).toMatch(/^[0-9a-f-]{36}$/);
+    expect(a.headers.get('x-middleware-request-x-nonce')).toBe(nonce(a));
+    expect(a.headers.get('cache-control')).toBeNull();
+    expect((await p(req('/account', { ip: '1.1.1.1' }))).headers.get('cache-control')).toBe(
+      'private, no-store',
+    );
+  });
+
+  it('403 responses carry the security headers too', async () => {
+    const p = createSecurityProxy({
+      bans: new StaticBanStore(new Set(['9.9.9.9'])),
+      limiter: null,
+      clientIpHeader: 'x-forwarded-for',
+      dev: false,
+    });
+    const r = await p(req('/', { ip: '9.9.9.9' }));
+    expect(r.status).toBe(403);
+    expect(r.headers.get('x-frame-options')).toBe('DENY');
   });
 });

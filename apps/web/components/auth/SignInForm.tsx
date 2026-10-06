@@ -3,12 +3,12 @@
 import { useCallback, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { OtpCode, parseOtpTarget, type OtpTarget } from '@rmmm/api';
-import { Button, en } from '@rmmm/ui/web';
+import { Button, en, StatusMessage, TextField } from '@rmmm/ui/web';
 import { publicEnv } from '@/lib/env';
 import { supabaseBrowser } from '@/lib/supabase/browser';
 import { Turnstile } from './Turnstile';
-import s from './forms.module.css';
 
+/** Email or phone one-time code (no passwords to store, reset or leak). */
 export function SignInForm({ next = '/account' }: { next?: string }) {
   const router = useRouter();
   const supabase = supabaseBrowser();
@@ -20,10 +20,11 @@ export function SignInForm({ next = '/account' }: { next?: string }) {
   const [error, setError] = useState<string | null>(null);
   const onToken = useCallback((t: string | null) => setCaptcha(t), []);
 
-  if (!supabase) return <p className={s.error}>{en.auth.notConfigured}</p>;
+  if (!supabase) return <StatusMessage tone="warning" title={en.auth.notConfigured} />;
 
   async function sendCode(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
     setError(null);
     const t = parseOtpTarget(contact);
     if (!t) return setError(en.auth.invalidContact);
@@ -34,12 +35,13 @@ export function SignInForm({ next = '/account' }: { next?: string }) {
         ? await supabase!.auth.signInWithOtp({ email: t.email, options })
         : await supabase!.auth.signInWithOtp({ phone: t.phone, options });
     setBusy(false);
-    if (err) return setError(en.common.tryAgain);
+    if (err) return setError(err.status === 429 ? en.forms.rateLimited : en.common.tryAgain);
     setTarget(t);
   }
 
   async function verify(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
     setError(null);
     if (!target || !OtpCode.safeParse(code).success) return setError(en.auth.invalidCode);
     setBusy(true);
@@ -55,76 +57,64 @@ export function SignInForm({ next = '/account' }: { next?: string }) {
 
   if (target) {
     return (
-      <form className={s.form} onSubmit={verify} noValidate>
-        <p className={s.status} role="status">
-          {en.auth.codeSentTo(target.kind === 'email' ? target.email : target.phone)}
-        </p>
-        <div className={s.field}>
-          <label className={s.label} htmlFor="otp">
-            {en.auth.codeLabel}
-          </label>
-          <input
-            id="otp"
-            className={`${s.input} ${s.mono}`}
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
-            value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-            aria-invalid={!!error}
-            aria-describedby={error ? 'auth-error' : undefined}
-            autoFocus
-          />
+      <form className="stack form" onSubmit={verify} noValidate>
+        <StatusMessage
+          tone="info"
+          title={en.auth.codeSentTo(target.kind === 'email' ? target.email : target.phone)}
+        />
+        <TextField
+          label={en.auth.codeLabel}
+          className="mono"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          value={code}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+          error={error}
+          autoFocus
+        />
+        <div className="row">
+          <Button type="submit" loading={busy} loadingLabel={en.auth.verifying}>
+            {en.auth.verify}
+          </Button>
+          <Button
+            variant="text"
+            onClick={() => {
+              setTarget(null);
+              setCode('');
+              setError(null);
+            }}
+          >
+            {en.auth.useDifferent}
+          </Button>
         </div>
-        {error && (
-          <p id="auth-error" className={s.error} role="alert">
-            {error}
-          </p>
-        )}
-        <Button type="submit" loading={busy}>
-          {en.auth.verify}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            setTarget(null);
-            setCode('');
-          }}
-        >
-          {en.auth.useDifferent}
-        </Button>
       </form>
     );
   }
 
   return (
-    <form className={s.form} onSubmit={sendCode} noValidate>
-      <div className={s.field}>
-        <label className={s.label} htmlFor="contact">
-          {en.auth.contactLabel}
-        </label>
-        <input
-          id="contact"
-          className={s.input}
-          autoComplete="email tel"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-          aria-invalid={!!error}
-          aria-describedby={error ? 'auth-error contact-hint' : 'contact-hint'}
-        />
-        <p id="contact-hint" className={s.hint}>
-          {en.auth.contactHint}
-        </p>
-      </div>
+    <form className="stack form" onSubmit={sendCode} noValidate>
+      <TextField
+        label={en.auth.contactLabel}
+        description={en.auth.contactHint}
+        autoComplete="username"
+        autoCapitalize="none"
+        spellCheck={false}
+        value={contact}
+        onChange={(e) => setContact(e.target.value)}
+        error={error}
+      />
       <Turnstile siteKey={publicEnv.turnstileSiteKey} onToken={onToken} />
-      {error && (
-        <p id="auth-error" className={s.error} role="alert">
-          {error}
-        </p>
-      )}
-      <Button type="submit" loading={busy} disabled={!!publicEnv.turnstileSiteKey && !captcha}>
-        {en.auth.sendCode}
-      </Button>
+      <div>
+        <Button
+          type="submit"
+          loading={busy}
+          loadingLabel={en.auth.sending}
+          disabled={!!publicEnv.turnstileSiteKey && !captcha}
+        >
+          {en.auth.sendCode}
+        </Button>
+      </div>
     </form>
   );
 }

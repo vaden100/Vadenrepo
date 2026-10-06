@@ -1,6 +1,16 @@
 import { colors, themes } from './colors';
-import { typeScale, type fontFamilies } from './type';
-import { borderWidth, motion, radius, space } from './layout';
+import { fluidType, typeScale, type fontFamilies } from './type';
+import {
+  borderWidth,
+  breakpoints,
+  duration,
+  easing,
+  motion,
+  radius,
+  shadow,
+  space,
+  zIndex,
+} from './layout';
 
 const kebab = (s: string) => s.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 
@@ -10,18 +20,33 @@ const fallbacks = {
   mono: "'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace",
 } as const satisfies Record<keyof typeof fontFamilies, string>;
 
-function block(selector: string, vars: Record<string, string | number>): string {
+function block(selector: string, vars: Record<string, string | number>, extra = ''): string {
   const body = Object.entries(vars)
     .map(([k, v]) => `  --${k}: ${v};`)
     .join('\n');
-  return `${selector} {\n${body}\n}`;
+  return `${selector} {\n${extra}${body}\n}`;
 }
 
+/** Theme roles plus the WBS 3 semantic aliases, so either naming works. */
 function themeVars(name: keyof typeof themes): Record<string, string> {
-  return Object.fromEntries(Object.entries(themes[name]).map(([k, v]) => [`color-${kebab(k)}`, v]));
+  const t = themes[name];
+  return {
+    ...Object.fromEntries(Object.entries(t).map(([k, v]) => [`color-${kebab(k)}`, v])),
+    'color-text-primary': t.text,
+    'color-accent': t.primary,
+    'color-accent-hover': t.primaryPressed,
+    'color-error': t.danger,
+  };
 }
 
-/** All tokens as CSS custom properties. Dark is the default; `[data-theme="light"]` opts in. */
+const themeBlock = (selector: string, name: keyof typeof themes) =>
+  block(selector, themeVars(name), `  color-scheme: ${name};\n`);
+
+/**
+ * All tokens as CSS custom properties.
+ * Dark is the default; with no explicit choice the OS preference wins ("system");
+ * `data-theme="light" | "dark"` on <html> (set server-side from a cookie, so no flash) wins over both.
+ */
 export function cssVariables(): string {
   const root: Record<string, string | number> = {};
   for (const [k, v] of Object.entries(colors)) root[`rmmm-${kebab(k)}`] = v;
@@ -34,14 +59,40 @@ export function cssVariables(): string {
     root[`text-${kebab(k)}-line`] = `${v.lineHeight}px`;
     root[`text-${kebab(k)}-weight`] = v.weight;
   }
+  for (const [k, v] of Object.entries(fluidType)) root[`text-fluid-${k}`] = v;
+  for (const [k, v] of Object.entries(duration)) root[`duration-${k}`] = `${v}ms`;
+  for (const [k, v] of Object.entries(easing)) root[`ease-${k}`] = v;
+  for (const [k, v] of Object.entries(zIndex)) root[`z-${kebab(k)}`] = v;
+  for (const [k, v] of Object.entries(shadow)) root[`shadow-${k}`] = v;
+  for (const [k, v] of Object.entries(breakpoints)) root[`bp-${k}`] = `${v}px`;
   root['motion-stamp-slam'] = `${motion.stampSlam.durationMs}ms`;
   root['motion-fade'] = `${motion.fade.durationMs}ms`;
   root['motion-receipt-slide'] = `${motion.receiptSlide.durationMs}ms`;
   root['motion-easing'] = motion.easing;
 
+  const lightSystem = themeBlock(':root:not([data-theme="dark"])', 'light')
+    .split('\n')
+    .map((l) => `  ${l}`)
+    .join('\n');
+
   return [
-    block(':root', { ...root, ...themeVars('dark') }),
-    block('[data-theme="light"]', themeVars('light')),
-    '@media (prefers-reduced-motion: reduce) {\n  :root {\n    --motion-stamp-slam: 0ms;\n    --motion-fade: 0ms;\n    --motion-receipt-slide: 0ms;\n  }\n}',
+    block(':root', root),
+    themeBlock(':root, [data-theme="dark"]', 'dark'),
+    `@media (prefers-color-scheme: light) {\n${lightSystem}\n}`,
+    themeBlock('[data-theme="light"]', 'light'),
+    [
+      '@media (prefers-reduced-motion: reduce) {',
+      '  :root {',
+      ...[
+        'motion-stamp-slam',
+        'motion-fade',
+        'motion-receipt-slide',
+        'duration-fast',
+        'duration-normal',
+        'duration-slow',
+      ].map((k) => `    --${k}: 0ms;`),
+      '  }',
+      '}',
+    ].join('\n'),
   ].join('\n\n');
 }

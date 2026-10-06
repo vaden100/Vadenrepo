@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { en } from '@rmmm/ui';
+import { en } from '@rmmm/ui/web';
 import { OnboardingForm } from '@/components/auth/OnboardingForm';
+import { PageHead } from '@/components/content/PageHead';
 import { getSession, safeNext } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
@@ -18,9 +19,8 @@ export default async function OnboardingPage({
   if (!session) redirect(`/auth?next=${encodeURIComponent(`/onboarding?next=${next}`)}`);
   if (session.profile?.age_confirmed_at && session.profile.terms_accepted_at) redirect(next);
   return (
-    <div className="container" style={{ paddingTop: 40, display: 'grid', gap: 16 }}>
-      <h1 className="h1">{en.onboarding.title}</h1>
-      <p className="lede">{en.onboarding.lede}</p>
+    <div className="container stack-lg">
+      <PageHead title={en.onboarding.title} lede={en.onboarding.lede} />
       <OnboardingForm next={next} />
     </div>
   );

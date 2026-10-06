@@ -22,3 +22,7 @@ apps/mobile/android/
 
 .DS_Store
 *.log
+
+# Playwright
+apps/web/test-results/
+apps/web/playwright-report/

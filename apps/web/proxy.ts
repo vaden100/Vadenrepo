@@ -23,6 +23,13 @@ function build() {
     bans: db ? new SupabaseBanStore(db.url, db.key, env.banCacheTtlMs) : null,
     limiter: db ? new SupabaseRateLimiter(db.url, db.key) : new MemoryRateLimiter(),
     clientIpHeader: env.clientIpHeader,
+    dev: process.env.NODE_ENV !== 'production',
+    csp: {
+      dev: process.env.NODE_ENV !== 'production',
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      turnstile: Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+      analyticsHost: process.env.NEXT_PUBLIC_ANALYTICS_HOST || undefined,
+    },
     next: async (req, res) => {
       const isPage =
         !req.nextUrl.pathname.startsWith('/_next/') && !req.nextUrl.pathname.includes('.');

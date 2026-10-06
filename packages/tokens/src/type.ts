@@ -25,3 +25,11 @@ export const typeScale = {
 >;
 
 export type TypeStyle = keyof typeof typeScale;
+
+/** Fluid sizes for big type (WBS 4). Body text stays fixed for readability. */
+export const fluidType = {
+  display: 'clamp(2.5rem, 1.6rem + 4.5vw, 5.5rem)',
+  h1: 'clamp(2rem, 1.5rem + 2.2vw, 3rem)',
+  h2: 'clamp(1.5rem, 1.3rem + 0.9vw, 2rem)',
+  h3: 'clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem)',
+} as const;

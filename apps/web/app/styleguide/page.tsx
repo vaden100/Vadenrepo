@@ -2,8 +2,12 @@ import type { Metadata } from 'next';
 import type { CSSProperties, ReactNode } from 'react';
 import { colors, contrastRatio, typeScale, space } from '@rmmm/tokens';
 import {
+  Breadcrumbs,
   Button,
+  ButtonLink,
   CardSkeleton,
+  EmptyState,
+  StatusMessage,
   CaseEnvelope,
   EmptyCaseEnvelope,
   EvidenceSummary,
@@ -20,7 +24,7 @@ import {
   WhyMatched,
   type IconName,
 } from '@rmmm/ui/web';
-import { StampSlamDemo, ThemeFrame } from './client';
+import { InteractiveDemos, StampSlamDemo, ThemeFrame } from './client';
 
 export const metadata: Metadata = { title: 'Style guide', robots: { index: false } };
 
@@ -200,8 +204,59 @@ export default function StyleguidePage() {
             <Button variant="secondary">Watch this page</Button>
             <Button variant="ghost">Before You Pay checklist</Button>
             <Button icon={<Icon name="lookup" size={20} />}>Look it up</Button>
+            <Button variant="tertiary">Tertiary</Button>
+            <Button variant="text">Text button</Button>
+            <Button variant="danger">Request deletion</Button>
+            <Button variant="icon" aria-label="Search">
+              <Icon name="lookup" />
+            </Button>
+            <ButtonLink href="#buttons" variant="secondary">
+              Link styled as button
+            </ButtonLink>
             <Button disabled>Disabled</Button>
-            <Button loading>Submit</Button>
+            <Button loading loadingLabel="Sending">
+              Send message
+            </Button>
+            <Button success successLabel="Sent">
+              Send message
+            </Button>
+          </div>
+        </Section>
+
+        <Section title="Forms, dialog and toasts">
+          <InteractiveDemos />
+        </Section>
+
+        <Section title="Status, empty state, breadcrumbs">
+          <div style={grid}>
+            <div style={{ display: 'grid', gap: 12 }}>
+              <StatusMessage tone="info" title="Info">
+                Neutral information.
+              </StatusMessage>
+              <StatusMessage tone="success" title="Success">
+                Confirmed by the server.
+              </StatusMessage>
+              <StatusMessage tone="warning" title="Warning">
+                Check before continuing.
+              </StatusMessage>
+              <StatusMessage tone="error" title="Error">
+                What went wrong and what to do.
+              </StatusMessage>
+            </div>
+            <EmptyState
+              title="No reports yet"
+              headingLevel={3}
+              action={<Button variant="secondary">Before You Pay checklist</Button>}
+            >
+              <p>That is not a guarantee. Here is what to check next.</p>
+            </EmptyState>
+            <Breadcrumbs
+              items={[
+                { label: 'Home', href: '#' },
+                { label: 'Resources', href: '#' },
+                { label: 'Dispute a payment' },
+              ]}
+            />
           </div>
         </Section>
 

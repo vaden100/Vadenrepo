@@ -69,7 +69,29 @@ export const RATE_RULES: readonly RateRule[] = [
     capacity: 5,
     refillPerMinute: 5 / 60,
   },
+  {
+    name: 'contact',
+    match: /^\/api\/contact$/,
+    methods: ['POST'],
+    capacity: 5,
+    refillPerMinute: 5 / 60,
+  },
+  {
+    name: 'consent',
+    match: /^\/api\/consent$/,
+    methods: ['POST'],
+    capacity: 20,
+    refillPerMinute: 20,
+  },
+  {
+    name: 'client-errors',
+    match: /^\/api\/client-errors$/,
+    methods: ['POST'],
+    capacity: 20,
+    refillPerMinute: 20,
+  },
   { name: 'share-card', match: /^\/api\/share-card$/, capacity: 30, refillPerMinute: 30 },
+  { name: 'og', match: /^\/og$/, capacity: 60, refillPerMinute: 60 },
   { name: 'api', match: /^\/api\//, capacity: 120, refillPerMinute: 120 },
 ];
 

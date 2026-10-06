@@ -13,7 +13,7 @@ select tables_are('public', array[
   'profiles', 'entities', 'entity_identifiers', 'entity_links', 'reports', 'report_entities', 'media',
   'cases', 'case_updates', 'episodes', 'episode_cases', 'watchlist', 'follows', 'notifications',
   'push_tokens', 'content_flags', 'user_blocks', 'disputes', 'ip_bans', 'device_bans', 'consents_log',
-  'deletion_requests', 'audit_log', 'rate_limits'
+  'deletion_requests', 'audit_log', 'rate_limits', 'contact_messages'
 ], 'all SPEC 7 tables (plus rate_limits) exist');
 
 select set_eq(

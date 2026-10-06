@@ -7,9 +7,13 @@
   "sideEffects": false,
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run"
   },
   "devDependencies": {
     "vitest": "^3.2.0"
+  },
+  "dependencies": {
+    "libphonenumber-js": "^1.12.0",
+    "tldts": "^7.0.0"
   }
 }

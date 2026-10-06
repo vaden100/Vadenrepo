@@ -58,6 +58,46 @@ jobs:
         env:
           E2E_REBUILD: '1'
 
+  browser:
+    # WBS 95 to 98: Playwright journeys, axe (both themes), keyboard, responsive, visual, perf.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @rmmm/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @rmmm/web build:e2e
+      - run: pnpm --filter @rmmm/web test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
+
+  browser-cross:
+    # WBS 47: the same journeys on Firefox and WebKit (Safari engine). Non-blocking until the
+    # first green run on CI, since only Chromium was available where the suite was written.
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @rmmm/web exec playwright install --with-deps firefox webkit
+      - run: pnpm --filter @rmmm/web build:e2e
+      - run: pnpm --filter @rmmm/web exec playwright test --project=firefox --project=webkit
+        env:
+          PW_ALL_BROWSERS: '1'
+
   audit:
     runs-on: ubuntu-latest
     steps:

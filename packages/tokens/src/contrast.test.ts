@@ -21,10 +21,36 @@ describe('WCAG AA text pairs (SPEC 13)', () => {
     ['mute on ink (>= 16px only)', colors.mute, colors.ink, AA_LARGE],
     ['light theme muted text', themes.light.textMuted, themes.light.background, AA_NORMAL],
     ['light theme text on surface', themes.light.text, themes.light.surface, AA_NORMAL],
+    ...(['dark', 'light'] as const).flatMap((t) =>
+      (
+        [
+          'danger',
+          'success',
+          'warning',
+          'info',
+          'textSecondary',
+          'textMuted',
+          'text',
+          'link',
+        ] as const
+      ).flatMap((role) =>
+        (['background', 'surface', 'surfaceElevated'] as const).map(
+          (bg) =>
+            [
+              `${t} ${role} on ${bg}`,
+              themes[t][role],
+              themes[t][bg],
+              role === 'textMuted' && t === 'dark' ? AA_LARGE : AA_NORMAL,
+            ] as const,
+        ),
+      ),
+    ),
+    ['paper-ink on light sheet', colors.paperInk, themes.light.sheet, AA_NORMAL],
+    ['paper on accent-pressed', colors.paper, themes.dark.primaryPressed, AA_NORMAL],
     ['dark danger text on ink', themes.dark.danger, themes.dark.background, AA_NORMAL],
     ['dark danger text on graphite', themes.dark.danger, themes.dark.surface, AA_NORMAL],
     ['light danger text on paper', themes.light.danger, themes.light.background, AA_NORMAL],
-  ])('%s', (_label, fg, bg, min) => {
+  ] as [string, string, string, number][])('%s', (_label, fg, bg, min) => {
     expect(contrastRatio(fg, bg)).toBeGreaterThanOrEqual(min);
   });
 
