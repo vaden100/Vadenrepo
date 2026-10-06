@@ -34,13 +34,13 @@ Turnstile secret and provider tokens are server-only.
 Checked in CI by `apps/web/e2e/perf.spec.ts` on a throttled profile (150 ms latency,
 1.6 Mbps, 4x CPU slowdown):
 
-| Metric                               | Budget                                           | Last measured                           |
-| ------------------------------------ | ------------------------------------------------ | --------------------------------------- |
-| Largest Contentful Paint (home)      | < 2.5 s                                          | 0.8 s                                   |
-| Cumulative Layout Shift (home)       | < 0.1                                            | 0.003                                   |
-| JavaScript, gzipped, home first load | < 170 KB                                         | 134 KB (Next.js + React ≈ 117 KB of it) |
-| Fonts                                | 5 faces, Latin-split woff2, `font-display: swap` | ≈ 90 KB for a Latin page                |
-| Third-party requests before consent  | 0                                                | 0 (asserted in `privacy.spec.ts`)       |
+| Metric                                               | Budget                                           | Last measured                           |
+| ---------------------------------------------------- | ------------------------------------------------ | --------------------------------------- |
+| Largest Contentful Paint (home)                      | < 2.5 s                                          | 0.8 s                                   |
+| Cumulative Layout Shift (home)                       | < 0.1                                            | 0.003                                   |
+| JavaScript on the wire (compressed), home first load | < 170 KB                                         | 150 KB (Next.js + React ≈ 117 KB of it) |
+| Fonts                                                | 5 faces, Latin-split woff2, `font-display: swap` | ≈ 90 KB for a Latin page                |
+| Third-party requests before consent                  | 0                                                | 0 (asserted in `privacy.spec.ts`)       |
 
 Heavy code is lazy: the identifier classifier (phone metadata + domain list) loads on
 first focus of the search field, not with the page. After launch, real-user Web Vitals
