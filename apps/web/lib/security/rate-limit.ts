@@ -37,9 +37,16 @@ export const RATE_RULES: readonly RateRule[] = [
   {
     name: 'report-write',
     match: /^\/api\/reports(\/|$)/,
-    methods: ['POST', 'PATCH'],
+    methods: ['POST', 'PATCH', 'DELETE'],
     capacity: 60,
     refillPerMinute: 60 / 60,
+  },
+  {
+    name: 'uploads',
+    match: /^\/api\/uploads\//,
+    methods: ['PUT'],
+    capacity: 30,
+    refillPerMinute: 30 / 60,
   },
   {
     name: 'auth',

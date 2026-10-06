@@ -5,6 +5,8 @@ import { CONSENT_COOKIE, CONSENT_VERSION } from '../lib/consent';
 export const PUBLIC_PAGES = [
   '/',
   '/lookup',
+  '/report',
+  '/report/status',
   '/resources',
   '/resources/before-you-pay',
   '/resources/payment-disputes',

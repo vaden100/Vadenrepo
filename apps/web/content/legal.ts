@@ -296,7 +296,7 @@ export const legalDocs: LegalDoc[] = [
       {
         heading: 'Coming later',
         paragraphs: [
-          'Media processing, video streaming, email and push providers will be added here before they are used.',
+          'Evidence files are cleaned (location and camera details removed, virus check) by our own processing service; no outside company receives them for that. The host that runs it, an optional voice-note transcription provider, video streaming, email and push providers will be added here before they are used.',
         ],
       },
     ],

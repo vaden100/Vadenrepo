@@ -46,11 +46,17 @@ export function requestId(req: NextRequest) {
 }
 
 /** Wraps a handler: anything thrown becomes a logged 500 with no internals in the response. */
-export function handler(name: string, fn: (req: NextRequest) => Promise<NextResponse>) {
-  return async (req: NextRequest) => {
+export function handler<C = unknown>(
+  name: string,
+  fn: (req: NextRequest, ctx: C) => Promise<NextResponse>,
+) {
+  return async (req: NextRequest, ctx: C) => {
     try {
-      return await fn(req);
+      return await fn(req, ctx);
     } catch (err) {
+      if (err instanceof Error && err.name === 'DbUnavailable') {
+        return apiError(503, 'unavailable', 'This is not available right now. Try again later.');
+      }
       log('error', `${name}.failed`, {
         requestId: requestId(req),
         err: err instanceof Error ? err.message : String(err),

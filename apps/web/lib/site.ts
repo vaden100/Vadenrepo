@@ -17,6 +17,11 @@ export interface NavItem {
 export const primaryNav: NavItem[] = [
   { href: '/lookup', label: en.nav.lookup, keywords: 'search check handle cashtag phone' },
   {
+    href: '/report',
+    label: en.report.nav,
+    keywords: 'report submit story receipts scam lost money',
+  },
+  {
     href: '/resources',
     label: en.nav.resources,
     keywords: 'help guides ftc ic3 dispute chargeback',
@@ -43,6 +48,11 @@ export const paletteDestinations: NavItem[] = [
     href: '/resources/payment-disputes',
     label: 'Dispute a payment',
     keywords: 'cash app zelle venmo paypal card refund chargeback',
+  },
+  {
+    href: '/report/status',
+    label: en.report.status.title,
+    keywords: 'case code claim code status',
   },
   { href: '/account', label: en.account.title, keywords: 'sign in profile' },
   {

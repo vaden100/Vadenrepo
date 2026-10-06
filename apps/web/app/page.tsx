@@ -30,6 +30,9 @@ export default function HomePage() {
         </p>
         <IdentifierProbe />
         <div className="hero__cta">
+          <Link href="/report" className={buttonClass('primary')}>
+            Got run? Tell your story
+          </Link>
           <Link href="/resources/payment-disputes" className={buttonClass('secondary')}>
             Already paid? Get your money back
           </Link>

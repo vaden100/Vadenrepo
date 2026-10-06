@@ -54,6 +54,8 @@ describe('rate rules (SPEC 9)', () => {
     ['/api/reports/abc/media', 'POST', 'report-media'],
     ['/api/reports/claim', 'POST', 'report-claim'],
     ['/api/reports', 'POST', 'report-write'],
+    ['/api/reports/abc/media/def', 'DELETE', 'report-write'],
+    ['/api/uploads/tok', 'PUT', 'uploads'],
     ['/api/flags', 'POST', 'flags'],
     ['/api/privacy/delete', 'POST', 'privacy'],
     ['/api/cases', 'GET', 'api'],

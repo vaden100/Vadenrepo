@@ -14,3 +14,4 @@ export {
   normalizePhone,
   type SocialPlatform,
 } from './normalize';
+export { extractIdentifiers, type ExtractedIdentifiers } from './extract';

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Phase 1 E2E: Postgres (migrations) + PostgREST + /rest/v1 gateway + `next start`.
-# Needs: Postgres 16 (+pgvector, pgTAP), curl, xz. Downloads PostgREST once into the cache.
+# Stack E2E: Postgres (migrations) + PostgREST + /rest/v1 gateway + `next start` + media worker.
+#   Phase 1: bans, rate limits, audit, RLS over HTTP (node --test security.test.mjs)
+#   Phase 2: anonymous report in a real browser with 2 images + voice note, EXIF removed,
+#            claim code works, consent rows stored (Playwright, e2e-stack/)
+# Needs: Postgres 16 (+pgvector, pgTAP), curl, xz, ffmpeg. Downloads PostgREST once.
+# E2E_ONLY=node|browser runs one half.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 CACHE="${RMMM_CACHE:-$HOME/.cache/rmmm}"
@@ -10,6 +14,11 @@ export JWT_SECRET="${JWT_SECRET:-e2e-only-secret-that-is-at-least-32-characters}
 export SUPABASE_URL="http://127.0.0.1:54321"
 WEB_PORT=3311
 export WEB_URL="http://127.0.0.1:$WEB_PORT"
+# Evidence goes to a local folder shared by Next and the worker (Supabase Storage stand-in).
+export STORAGE_DRIVER=local ALLOW_LOCAL_STORAGE=1
+export STORAGE_LOCAL_DIR="${TMPDIR:-/tmp}/rmmm-e2e-storage"
+export UPLOAD_SIGNING_SECRET="e2e-only-upload-signing-secret-0123456789"
+rm -rf "$STORAGE_LOCAL_DIR"
 
 pids=()
 cleanup() {
@@ -35,7 +44,7 @@ pids+=($!)
 node "$ROOT/scripts/e2e/gateway.mjs" &
 pids+=($!)
 
-SERVICE_KEY="$(node "$ROOT/scripts/e2e/jwt.mjs" '{"role":"service_role"}')"
+export SERVICE_KEY="$(node "$ROOT/scripts/e2e/jwt.mjs" '{"role":"service_role"}')"
 if [ ! -f "$ROOT/apps/web/.next/BUILD_ID" ] || [ "${E2E_REBUILD:-0}" = "1" ]; then
   pnpm --dir "$ROOT/apps/web" build >/dev/null
 fi
@@ -44,6 +53,13 @@ fi
   SUPABASE_URL="$SUPABASE_URL" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_KEY" BAN_CACHE_TTL_MS=0 PORT=$WEB_PORT \
     exec pnpm exec next start -H 127.0.0.1 >"${TMPDIR:-/tmp}/rmmm-next.log" 2>&1
 ) &
+pids+=($!)
+
+if [ ! -f "$ROOT/apps/worker/dist/index.js" ] || [ "${E2E_REBUILD:-0}" = "1" ]; then
+  pnpm --dir "$ROOT/apps/worker" build >/dev/null
+fi
+SUPABASE_URL="$SUPABASE_URL" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_KEY" POLL_MS=500 PORT=8788 \
+  node "$ROOT/apps/worker/dist/index.js" >"${TMPDIR:-/tmp}/rmmm-worker.log" 2>&1 &
 pids+=($!)
 
 ready=0
@@ -60,4 +76,9 @@ if [ "$ready" != 1 ]; then
   exit 1
 fi
 
-node --test "$ROOT/scripts/e2e/security.test.mjs"
+if [ "${E2E_ONLY:-}" != "browser" ]; then
+  node --test "$ROOT/scripts/e2e/security.test.mjs"
+fi
+if [ "${E2E_ONLY:-}" != "node" ]; then
+  pnpm --dir "$ROOT/apps/web" exec playwright test -c playwright.stack.config.ts
+fi

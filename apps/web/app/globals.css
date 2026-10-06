@@ -7,6 +7,7 @@
 @import '@fontsource/ibm-plex-mono/600.css';
 @import '@rmmm/ui/web/styles.css';
 @import '../components/content/content.css';
+@import '../components/report/report.css';
 
 /* ---------- Base ---------- */
 *,

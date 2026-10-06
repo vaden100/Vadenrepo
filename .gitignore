@@ -26,3 +26,6 @@ apps/mobile/android/
 # Playwright
 apps/web/test-results/
 apps/web/playwright-report/
+
+# Local evidence storage (STORAGE_DRIVER=local)
+.data/

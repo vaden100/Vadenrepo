@@ -36,7 +36,8 @@ jobs:
         run: pnpm build
 
   db-and-security:
-    # SPEC 16 Phase 1 acceptance: pgTAP RLS/audit suite + end-to-end ban/rate-limit test.
+    # SPEC 16 Phase 1 + 2 acceptance: pgTAP suite, end-to-end bans/rate limits/audit, and an
+    # anonymous report through the real UI (2 images + voice note) processed by the worker.
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -48,15 +49,22 @@ jobs:
       - name: Install Postgres 16, pgvector, pgTAP
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-16 postgresql-16-pgvector postgresql-16-pgtap libtap-parser-sourcehandler-pgtap-perl
+          sudo apt-get install -y postgresql-16 postgresql-16-pgvector postgresql-16-pgtap libtap-parser-sourcehandler-pgtap-perl ffmpeg
           sudo systemctl stop postgresql || true
       - run: pnpm install --frozen-lockfile
       - name: Database tests (pgTAP)
         run: pnpm test:db
-      - name: End-to-end security (Postgres + PostgREST + next start)
+      - name: Playwright Chromium
+        run: pnpm --filter @rmmm/web exec playwright install --with-deps chromium
+      - name: End-to-end stack (Postgres + PostgREST + next start + worker + browser)
         run: pnpm test:e2e:security
         env:
           E2E_REBUILD: '1'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: stack-traces
+          path: apps/web/test-results
 
   browser:
     # WBS 95 to 98: Playwright journeys, axe (both themes), keyboard, responsive, visual, perf.

@@ -32,6 +32,7 @@ export type ApiError = {
     | 'invalid'
     | 'unauthorized'
     | 'forbidden'
+    | 'not_found'
     | 'conflict'
     | 'rate_limited'
     | 'unavailable'
