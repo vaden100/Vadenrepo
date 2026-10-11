@@ -6,7 +6,7 @@ import { PDFDocument } from 'pdf-lib';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 import { cleanAv } from './av.js';
-import { dhash, hamming, phash, toSigned64 } from './hash.js';
+import { dhash, hamming, phash, toSigned64 } from '@rmmm/media-hash';
 import { cleanImage } from './image.js';
 import { cleanPdf } from './pdf.js';
 import { sniff } from './sniff.js';

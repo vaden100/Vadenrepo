@@ -5,7 +5,13 @@ import type { NextConfig } from 'next';
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  transpilePackages: ['@rmmm/ui', '@rmmm/tokens', '@rmmm/api', '@rmmm/search-core'],
+  transpilePackages: [
+    '@rmmm/ui',
+    '@rmmm/tokens',
+    '@rmmm/api',
+    '@rmmm/search-core',
+    '@rmmm/media-hash',
+  ],
   images: { formats: ['image/avif', 'image/webp'] },
   experimental: {
     // proxy.ts buffers request bodies. Evidence goes straight to Supabase Storage in

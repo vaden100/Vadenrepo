@@ -47,6 +47,7 @@ export interface EntityView {
   state: string;
   isPublic: boolean;
   legalHold: boolean;
+  ownerId: string | null;
 }
 
 /** Details, approvals, publish, legal hold. The two-person rule is Postgres's; we show its answer. */
@@ -68,6 +69,7 @@ export function EntityControls({
     city: entity.city,
     state: entity.state,
   });
+  const [owner, setOwner] = useState(entity.ownerId ?? '');
   const url = `/api/admin/entities/${entity.id}`;
   const moderatorish = role === 'moderator' || role === 'admin';
   return (
@@ -139,6 +141,36 @@ export function EntityControls({
           )}
         </div>
       </section>
+
+      {role === 'admin' && (
+        <section aria-labelledby="owner" className="stack">
+          <h2 id="owner">{t.owner}</h2>
+          <div className="row row--end">
+            <TextField
+              name="ownerId"
+              label={en.admin.bans.accountId}
+              description={t.ownerHint}
+              value={owner}
+              onChange={(e) => setOwner(e.target.value.trim())}
+              maxLength={36}
+            />
+            <Button
+              variant="secondary"
+              disabled={busy || (owner !== '' && owner.length !== 36)}
+              onClick={() =>
+                run(
+                  'PATCH',
+                  url,
+                  { action: 'set_owner', userId: owner || null },
+                  en.admin.report.saved,
+                )
+              }
+            >
+              {t.ownerSave}
+            </Button>
+          </div>
+        </section>
+      )}
 
       <section aria-labelledby="details" className="stack">
         <h2 id="details">{t.details}</h2>

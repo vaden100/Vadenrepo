@@ -16,6 +16,7 @@ import {
   type MediaView,
   type MoneyStep,
   type ReportDraftView,
+  type SearchResponse,
   type SubmitResult as SubmitOk,
   type WhoStep,
 } from '@rmmm/api';
@@ -102,14 +103,22 @@ function quickExit() {
  * Submit a story (SPEC 4.1): six steps and a review, saved to the server as you go. Nothing
  * is shown as saved until the server confirms (WBS 147).
  */
-export function ReportFlow({ member }: { member: { name: string } | null }) {
+export function ReportFlow({
+  member,
+  prefillName,
+}: {
+  member: { name: string } | null;
+  /** From "I paid them too" on an entity page: the public name, nothing private. */
+  prefillName?: string;
+}) {
   const [loading, setLoading] = useState(true);
   const [available, setAvailable] = useState(true);
   const [resumed, setResumed] = useState(false);
   const [draft, setDraft] = useState<ReportDraftView | null>(null);
   const [step, setStep] = useState<Step>(1);
   const [category, setCategory] = useState('');
-  const [who, setWho] = useState<Who>({});
+  const [who, setWho] = useState<Who>(prefillName ? { businessName: prefillName } : {});
+  const [match, setMatch] = useState<{ slug: string; name: string } | null>(null);
   const [money, setMoney] = useState<Money>({ currency: 'USD' });
   const [story, setStory] = useState('');
   const [media, setMedia] = useState<MediaView[]>([]);
@@ -238,6 +247,31 @@ export function ReportFlow({ member }: { member: { name: string } | null }) {
     };
   const editWho = edit<Who>(setWho);
   const editMoney = edit<Money>(setMoney);
+
+  // SPEC 4.1 step 2: live search while they type (debounced 250 ms). Public matches only.
+  const probe =
+    who.cashtag ||
+    who.phone ||
+    who.instagram ||
+    who.tiktok ||
+    who.zelle ||
+    who.venmo ||
+    who.website ||
+    '';
+  useEffect(() => {
+    if (step !== 2 || probe.trim().length < 3) return;
+    const id = window.setTimeout(async () => {
+      const r = await requestJson<SearchResponse>(
+        'GET',
+        `/api/search?q=${encodeURIComponent(probe.trim())}`,
+      );
+      const top = r.ok
+        ? r.data.results.find((h) => h.reasons.some((x) => x.startsWith('same_')))
+        : undefined;
+      setMatch(top ? { slug: top.slug, name: top.name } : null);
+    }, 250);
+    return () => window.clearTimeout(id);
+  }, [step, probe]);
 
   // Poll while the worker cleans files.
   const pending = media.some(
@@ -476,6 +510,17 @@ export function ReportFlow({ member }: { member: { name: string } | null }) {
       body = (
         <div className="stack" data-field="who">
           <p className="muted">{t.who.hint}</p>
+          {match && (
+            <StatusMessage
+              tone="info"
+              title={en.lookup.reportMatch(match.name)}
+              action={
+                <Link href={`/entities/${match.slug}`} target="_blank">
+                  {en.lookup.reportMatchLink}
+                </Link>
+              }
+            />
+          )}
           {errors.who && <StatusMessage tone="error" title={errors.who} />}
           {WHO_GROUPS.map((g) => (
             <fieldset key={g.legend} className="report__group">

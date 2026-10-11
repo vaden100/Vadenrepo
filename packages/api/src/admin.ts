@@ -64,6 +64,8 @@ export const EntityAction = z.discriminatedUnion('action', [
     .object({ action: z.literal('add_identifier'), type: z.enum(IDENT_TYPES), value: text(300) })
     .strict(),
   z.object({ action: z.literal('remove_identifier'), identifierId: z.uuid() }).strict(),
+  /** Verified business rep (right of reply). Admins only, after verifying ownership offline. */
+  z.object({ action: z.literal('set_owner'), userId: z.uuid().nullable() }).strict(),
 ]);
 export type EntityAction = z.infer<typeof EntityAction>;
 

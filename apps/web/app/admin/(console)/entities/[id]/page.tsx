@@ -32,7 +32,7 @@ export default async function EntityDetail({ params }: { params: Promise<{ id: s
     await Promise.all([
       sb
         .from('entities')
-        .select('id, display_name, category, city, state, is_public, legal_hold, slug')
+        .select('id, display_name, category, city, state, is_public, legal_hold, slug, claimed_by')
         .eq('id', id)
         .maybeSingle(),
       sb.from('entity_identifiers').select('id, type, raw').eq('entity_id', id).order('type'),
@@ -82,6 +82,7 @@ export default async function EntityDetail({ params }: { params: Promise<{ id: s
           state: e.state ?? '',
           isPublic: e.is_public,
           legalHold: e.legal_hold,
+          ownerId: e.claimed_by,
         }}
         approvals={(approvals ?? []).map((a) => ({
           name: a.staff_id === userId ? en.admin.you : a.staff_id.slice(0, 8),

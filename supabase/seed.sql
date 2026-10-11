@@ -17,7 +17,8 @@ insert into public.entity_identifiers (entity_id, type, raw, norm, norm_loose) v
 
 insert into public.entity_links (a, b, reason, confidence, evidence) values
   ('5eed0000-0000-0000-0000-000000000001', '5eed0000-0000-0000-0000-000000000002', 'shared_cashtag', 0.95,
-   '{"cashtag": "teelacesdemo"}');
+   '{"cashtag": "teelacesdemo"}')
+on conflict do nothing;
 
 insert into public.cases (slug, title, entity_id, category, city, state, status, summary, published)
 values ('the-75-booking-demo', 'The $75 booking that never happened (demo)', '5eed0000-0000-0000-0000-000000000001',

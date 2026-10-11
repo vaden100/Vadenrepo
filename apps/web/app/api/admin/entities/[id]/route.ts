@@ -117,6 +117,11 @@ export const PATCH = adminRoute<Ctx>('entities.update', async (req, staff, { par
         .insert({ entity_id: id, type: a.type, raw: a.value, ...n });
       return pgError(error) ?? json({ ok: true }, 201);
     }
+    case 'set_owner': {
+      if (role !== 'admin') return deny();
+      const { error } = await sb.from('entities').update({ claimed_by: a.userId }).eq('id', id);
+      return pgError(error) ?? json({ ok: true });
+    }
     case 'remove_identifier': {
       if (!moderatorish) return deny();
       const { error } = await sb

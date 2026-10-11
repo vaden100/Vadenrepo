@@ -25,7 +25,8 @@
     "next": "16.3.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "@rmmm/media-hash": "workspace:*"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

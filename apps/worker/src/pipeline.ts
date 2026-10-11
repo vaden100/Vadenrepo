@@ -3,7 +3,7 @@ import { cleanAv, decodeDurationMs } from './av.js';
 import { scan } from './clamav.js';
 import type { WorkerConfig } from './config.js';
 import type { Db } from './db.js';
-import { dhash, phash, sha256 } from './hash.js';
+import { dhash, phash, sha256 } from '@rmmm/media-hash';
 import { cleanImage, type Box } from './image.js';
 import { log } from './log.js';
 import { cleanPdf } from './pdf.js';

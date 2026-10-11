@@ -4,7 +4,7 @@ import { en } from '@rmmm/ui/web';
 import { Deadline } from '@/components/admin/Deadline';
 import { DisputeForm } from '@/components/admin/QueueForms';
 import { requireStaff } from '@/lib/admin/staff';
-import { renderTime } from '@/lib/admin/time';
+import { renderTime } from '@/lib/time';
 
 export const metadata: Metadata = { title: en.admin.nav.disputes };
 

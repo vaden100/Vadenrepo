@@ -9,6 +9,7 @@ cases, watch the episodes.
 | [SPEC.md](SPEC.md)                                         | What the product is and the rules it follows (source of truth)                  |
 | [docs/website-foundations.md](docs/website-foundations.md) | Sitemap, flows, design, security, privacy, SEO, data, API and test strategy     |
 | [docs/operations.md](docs/operations.md)                   | Environments, deploy, budgets, monitoring, backups, third parties, QA checklist |
+| [docs/open-data-sources.md](docs/open-data-sources.md)     | Open data for lookups, and which app-tracking patterns we refuse                |
 | [docs/self-audit.md](docs/self-audit.md)                   | Every Website Build Spec criterion and where it is met (or why not)             |
 | [CLAUDE.md](CLAUDE.md)                                     | Working rules for contributors and Claude Code                                  |
 

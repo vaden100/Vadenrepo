@@ -14,7 +14,7 @@ select tables_are('public', array[
   'cases', 'case_updates', 'episodes', 'episode_cases', 'watchlist', 'follows', 'notifications',
   'push_tokens', 'content_flags', 'user_blocks', 'disputes', 'ip_bans', 'device_bans', 'consents_log',
   'deletion_requests', 'audit_log', 'rate_limits', 'contact_messages', 'report_identifiers',
-  'entity_approvals'
+  'entity_approvals', 'entity_stats'
 ], 'all SPEC 7 tables (plus rate_limits) exist');
 
 select set_eq(

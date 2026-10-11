@@ -1,3 +1,7 @@
+/**
+ * Image fingerprints shared by the worker (evidence) and the web flyer check (SPEC 8.3).
+ * Both sides must compute exactly the same 64-bit values, so this is the only copy.
+ */
 import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 

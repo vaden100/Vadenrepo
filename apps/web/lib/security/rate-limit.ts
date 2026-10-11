@@ -49,6 +49,13 @@ export const RATE_RULES: readonly RateRule[] = [
     refillPerMinute: 30 / 60,
   },
   {
+    name: 'entity-reply',
+    match: /^\/api\/entities\/[^/]+\/reply$/,
+    methods: ['POST'],
+    capacity: 10,
+    refillPerMinute: 10 / 60,
+  },
+  {
     name: 'admin',
     match: /^\/api\/admin\//,
     methods: ['POST', 'PATCH', 'DELETE'],

@@ -1,9 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { classify } from '@rmmm/search-core';
+import type { SearchResponse } from '@rmmm/api';
 import { buttonClass, EmptyState, en } from '@rmmm/ui/web';
 import { IdentifierProbe } from '@/components/content/IdentifierProbe';
 import { PageHead } from '@/components/content/PageHead';
+import { FlyerCheck } from '@/components/search/FlyerCheck';
+import { SearchResults } from '@/components/search/SearchResults';
+import { renderTime } from '@/lib/time';
+import { log } from '@/lib/log';
+import { searchEverything } from '@/lib/server/search';
 import { beforeYouPay } from '@/content/resources';
 import { getNonce } from '@/lib/nonce';
 import { pageMetadata } from '@/lib/seo';
@@ -34,6 +40,16 @@ export default async function LookupPage({
   // Classified on the server too: the readout is server-rendered and works without JavaScript.
   const c = q ? classify(q) : null;
   const nonce = await getNonce();
+  let data: SearchResponse | null = null;
+  let unavailable = false;
+  if (c) {
+    try {
+      data = await searchEverything(q);
+    } catch (err) {
+      unavailable = true;
+      log('warn', 'lookup.unavailable', { err: err instanceof Error ? err.message : String(err) });
+    }
+  }
   return (
     <div className="container stack-lg">
       <PageHead
@@ -43,16 +59,18 @@ export default async function LookupPage({
         lede={en.lookup.lede}
       />
       <IdentifierProbe initial={q} initialResult={c} autoFocus={!q} />
-      <EmptyState
-        title={en.lookup.notYetTitle}
-        action={
-          <Link href="/resources/payment-disputes" className={buttonClass('secondary')}>
-            Already paid? Get your money back
-          </Link>
-        }
-      >
-        <p>{en.lookup.notYetBody}</p>
-      </EmptyState>
+      {data && <SearchResults data={data} now={new Date(renderTime())} />}
+      {unavailable && (
+        <EmptyState
+          title={en.lookup.unavailable}
+          action={
+            <Link href="/resources/payment-disputes" className={buttonClass('secondary')}>
+              Already paid? Get your money back
+            </Link>
+          }
+        />
+      )}
+      <FlyerCheck />
       <section aria-labelledby="byp" className="stack">
         <h2 id="byp" className="h2">
           Before you pay

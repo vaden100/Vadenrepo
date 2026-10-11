@@ -18,13 +18,18 @@ test('hero check classifies as you type', async ({ page }) => {
   await expect(readout).toContainText('@laced.by.tee');
 });
 
-test('submitting goes to /lookup with an honest empty state', async ({ page }) => {
+test('submitting goes to /lookup and says so honestly when search is offline', async ({ page }) => {
   await page.goto('/');
   const input = page.getByLabel('Business, @handle, $cashtag, phone, email or website');
   await input.fill('@nailz2');
   await input.press('Enter');
   await expect(page).toHaveURL(/\/lookup\?q=%40nailz2/);
-  await expect(page.getByRole('heading', { name: 'Results open soon' })).toBeVisible();
+  // This suite runs without a database; the stack E2E covers real results.
+  await expect(
+    page.getByRole('heading', {
+      name: 'Search is not available right now. Try again in a minute.',
+    }),
+  ).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 });
 

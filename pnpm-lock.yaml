@@ -141,6 +141,9 @@ importers:
       '@rmmm/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@rmmm/media-hash':
+        specifier: workspace:*
+        version: link:../../packages/media-hash
       '@rmmm/search-core':
         specifier: workspace:*
         version: link:../../packages/search-core
@@ -187,6 +190,9 @@ importers:
 
   apps/worker:
     dependencies:
+      '@rmmm/media-hash':
+        specifier: workspace:*
+        version: link:../../packages/media-hash
       '@rmmm/search-core':
         specifier: workspace:*
         version: link:../../packages/search-core
@@ -222,6 +228,19 @@ importers:
         specifier: ^4.1.0
         version: 4.6.5
     devDependencies:
+      vitest:
+        specifier: ^3.2.0
+        version: 3.2.7(@types/node@22.20.5)(lightningcss@1.33.0)(terser@5.51.2)(yaml@2.9.1)
+
+  packages/media-hash:
+    dependencies:
+      sharp:
+        specifier: ^0.35.5
+        version: 0.35.5(@types/node@22.20.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
       vitest:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@22.20.5)(lightningcss@1.33.0)(terser@5.51.2)(yaml@2.9.1)

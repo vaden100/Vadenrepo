@@ -7,10 +7,10 @@ are working on before changing anything.
 ## How we build
 
 - One phase at a time (SPEC 16). A phase is done only when its acceptance checks pass.
-- Current status: **Phase 3 done** (admin console at `/admin`: queue, report review with
-  evidence viewer and redaction, entities with two-person approval, merge and link graph, flags
-  with 24-hour timers, disputes inbox, bans, audit log), on top of Phases 1 and 2 and the Website
-  Build Spec (`docs/website-foundations.md`, audit in `docs/self-audit.md`). Next: Phase 4 (deep search).
+- Current status: **Phase 4 done** (deep search: `/lookup` results, flyer check, `/entities/[slug]`,
+  rebrand linking, right of reply, mobile Lookup tab), on top of Phases 1 to 3 and the Website
+  Build Spec (`docs/website-foundations.md`, audit in `docs/self-audit.md`). Research behind
+  outside data sources: `docs/open-data-sources.md`. Next: Phase 5 (cases + episodes).
 - Website criteria that conflict with SPEC.md are decided in `docs/website-foundations.md`
   section 17. SPEC.md wins.
 
@@ -23,7 +23,8 @@ apps/worker      Node media pipeline: job queue, magic bytes, ClamAV, EXIF/metad
 packages/tokens  design tokens -> CSS vars (cssVariables()) + RN values, WCAG tests
 packages/ui      shared/ (strings, stamp meta, formatters), web/ (DOM + styles.css), native/ (RN)
 packages/api     zod enums mirroring the Postgres enums in SPEC 7 (schemas + client later)
-packages/search-core  identifier classifier + normalizers (Phase 4)
+packages/search-core  identifier classifier + normalizers (SPEC 8.1)
+packages/media-hash   pHash/dHash shared by the worker and the flyer check (one copy, same values)
 supabase/        migrations (schema, RLS, functions), seed.sql (*.demo), pgtap/ (DB tests)
 brand/           SVG assets. Run `pnpm brand:sync` after changing anything here.
 ```
@@ -102,6 +103,15 @@ Run `pnpm check && pnpm build` before every commit. CI runs the same plus `pnpm 
   publish guard counts `entity_approvals` rows (moderator + editor, two different people).
 - Staff never see a reporter's IP or device hash (column grants). Bans from a report go through
   `ban_report_source()` (admins only).
+
+**Search and public pages (SPEC 4.2, 8)**
+
+- Classify in `search-core`, plan in Postgres (`search_everything`, `search_flyer`, `entity_page`).
+  Public callers only ever get public entities; a strong match on a non-public entity returns
+  `underReview` with no details. Identifiers from unreviewed reports are never surfaced.
+- Never show the ranking score. Never add outside data (FTC, FCC, CFPB...) to a score or use it to
+  name anyone; see `docs/open-data-sources.md` before adding a source.
+- No network or device fingerprinting, ever (see the research notes).
 
 **Reports and evidence (SPEC 4.1, 6, 11)**
 
