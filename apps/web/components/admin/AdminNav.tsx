@@ -12,6 +12,7 @@ export function AdminNav({ role, who }: { role: string; who: string }) {
     { href: '/admin', label: t.dashboard },
     { href: '/admin/reports', label: t.reports },
     { href: '/admin/entities', label: t.entities },
+    { href: '/admin/files', label: t.files },
     { href: '/admin/flags', label: t.flags },
     { href: '/admin/disputes', label: t.disputes },
     ...(role === 'admin'

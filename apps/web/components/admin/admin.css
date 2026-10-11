@@ -225,3 +225,43 @@
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-border);
 }
+.file-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.file-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  min-width: 0;
+}
+.file-card__preview {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+.file-card__preview img,
+.file-card__preview video {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+.file-card__preview audio {
+  width: 100%;
+}
+.file-card__meta {
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-1);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.file-card__meta p {
+  margin: 0;
+}

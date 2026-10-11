@@ -253,3 +253,83 @@ test('a business dispute reaches the inbox with a 7-day deadline and gets an out
   ).toBe('resolved:annotated');
   await ctx.close();
 });
+
+test('staff can browse every uploaded file in one place', async ({ browser }) => {
+  // A report with one photo, sent the way the app sends it, then cleaned by the worker.
+  const headers = {
+    'x-rmmm-device': 'e2e-files-device',
+    'x-forwarded-for': '198.18.0.80',
+    'content-type': 'application/json',
+  };
+  const created = (await (
+    await fetch(`${WEB}/api/reports`, {
+      method: 'POST',
+      headers,
+      body: '{"category":"not_delivered"}',
+    })
+  ).json()) as { id: string; draftToken: string };
+  const auth = { ...headers, 'x-rmmm-draft': created.draftToken };
+  const { default: sharp } = await import('sharp');
+  const img = await sharp({
+    create: { width: 320, height: 240, channels: 3, background: '#2e5e8c' },
+  })
+    .jpeg()
+    .toBuffer();
+  const slot = (await (
+    await fetch(`${WEB}/api/reports/${created.id}/media`, {
+      method: 'POST',
+      headers: auth,
+      body: JSON.stringify({ mime: 'image/jpeg', bytes: img.length }),
+    })
+  ).json()) as {
+    media: { id: string };
+    upload: { url: string; headers: Record<string, string> };
+  };
+  await fetch(WEB + slot.upload.url, {
+    method: 'PUT',
+    headers: { ...slot.upload.headers, 'x-forwarded-for': '198.18.0.80' },
+    body: img,
+  });
+  await fetch(`${WEB}/api/reports/${created.id}/media/${slot.media.id}/complete`, {
+    method: 'POST',
+    headers: auth,
+    body: '{}',
+  });
+  await expect
+    .poll(() => psql(`select upload_status from media where id = '${slot.media.id}'`), {
+      timeout: 30_000,
+    })
+    .toBe('ready');
+
+  const ctx = await browser.newContext();
+  await signIn(ctx, createUser('moderator'));
+  const page = await ctx.newPage();
+  await decideConsent(page);
+  await page.goto('/admin/files?kind=image');
+  const card = page.getByTestId('file-card').first();
+  await expect(card.getByText('Cleaned')).toBeVisible();
+  const image = card.locator('img');
+  await expect(image).toBeVisible();
+  expect(await image.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(
+    true,
+  );
+  if (process.env.SHOT_DIR)
+    await page.screenshot({ path: `${process.env.SHOT_DIR}/admin-files.png`, fullPage: true });
+  await expect(
+    page.getByRole('link', { name: 'Older' }).or(page.getByText(/files?$/).first()),
+  ).toBeVisible();
+  await axe(page);
+
+  // Filters work, and members never see this page or the files.
+  await page.goto('/admin/files?kind=pdf&status=rejected');
+  await expect(
+    page.getByText('No files match.').or(page.getByTestId('file-card').first()),
+  ).toBeVisible();
+  await ctx.close();
+  const member = await browser.newContext();
+  await signIn(member, createUser('member'));
+  const mp = await member.newPage();
+  expect((await mp.goto('/admin/files'))?.status()).toBe(404);
+  expect((await mp.request.get(`/api/admin/media/${slot.media.id}`)).status()).toBe(404);
+  await member.close();
+});

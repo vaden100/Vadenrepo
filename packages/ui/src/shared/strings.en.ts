@@ -645,6 +645,7 @@ export const en = {
       dashboard: 'Dashboard',
       reports: 'Reports',
       entities: 'Entities',
+      files: 'Files',
       flags: 'Flags',
       disputes: 'Disputes',
       bans: 'Bans',
@@ -837,6 +838,43 @@ export const en = {
       ownerHint:
         'Account id of the person you verified owns this business. They can post the public business response.',
       ownerSave: 'Save owner',
+    },
+    files: {
+      lede: 'Every file people sent with a report, newest first. Files come from private storage and are shown to staff only.',
+      kind: 'Type',
+      status: 'Status',
+      all: 'All',
+      kinds: { image: 'Images', pdf: 'PDFs', audio: 'Audio', video: 'Video' } as Record<
+        string,
+        string
+      >,
+      statuses: {
+        ready: 'Cleaned',
+        processing: 'Being cleaned',
+        uploaded: 'Waiting to clean',
+        awaiting_upload: 'Upload not finished',
+        rejected: 'Not accepted',
+        failed: 'Failed',
+      } as Record<string, string>,
+      total: (n: number) => `${n} ${n === 1 ? 'file' : 'files'}`,
+      size: (bytes: number) =>
+        bytes < 1024 * 1024
+          ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+          : `${(bytes / 1024 / 1024).toFixed(1)} MB`,
+      kindOne: { image: 'Image', pdf: 'PDF', audio: 'Audio', video: 'Video' } as Record<
+        string,
+        string
+      >,
+      report: 'Report',
+      covered: 'Covered copy',
+      voice: 'Voice note',
+      open: 'Open file',
+      newer: 'Newer',
+      older: 'Older',
+      page: (n: number) => `Page ${n}`,
+      none: 'No files match.',
+      outside: (n: number, label: string) => `${n.toLocaleString('en-US')} hosts from ${label}`,
+      data: 'What is stored',
     },
     flags: {
       lede: 'Every flag gets a response within 24 hours (SPEC 10.7).',
