@@ -25,7 +25,10 @@ export function IdentifierProbe({
   initialResult = null,
   autoFocus = false,
   headingLevel = 2,
+  from = 'home',
 }: {
+  /** Entry point recorded with the finished lookup (consent-gated analytics only). */
+  from?: string;
   initial?: string;
   /** Classified on the server, so the readout is there on first paint and without JS. */
   initialResult?: ClassifiedQuery | null;
@@ -123,6 +126,8 @@ export function IdentifierProbe({
           </div>
         ) : null}
       </div>
+      {/* After the search box so the URL reads /lookup?q=...&from=... */}
+      <input type="hidden" name="from" value={from} />
     </form>
   );
 }

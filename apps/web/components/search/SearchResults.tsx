@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import type { SearchResponse } from '@rmmm/api';
 import { EvidenceSummary, LinkedPages, WhyMatched, en } from '@rmmm/ui/web';
+import { OutsideRecords } from './OutsideRecords';
 import { categoryLabel, linkedPages, officialChecks, place, reasonChips } from './results';
 
 /** SPEC 4.2 results: evidence summary, why it matched, linked pages. Never a score. */
 export function SearchResults({ data, now }: { data: SearchResponse; now: Date }) {
   const checks = officialChecks(data.results.map((r) => r.category));
   if (data.results.length === 0) {
-    return <EvidenceSummary state={data.underReview ? 'under_review' : 'no_results'} />;
+    return (
+      <div className="stack-lg">
+        <OutsideRecords records={data.outside ?? []} />
+        <EvidenceSummary state={data.underReview ? 'under_review' : 'no_results'} />
+      </div>
+    );
   }
   return (
     <section aria-labelledby="results-title" className="stack-lg">
@@ -40,6 +46,7 @@ export function SearchResults({ data, now }: { data: SearchResponse; now: Date }
         ))}
       </ol>
       {data.underReview && <EvidenceSummary state="under_review" />}
+      <OutsideRecords records={data.outside ?? []} />
       {checks.length > 0 && (
         <section aria-labelledby="official" className="stack">
           <h3 id="official">{en.lookup.officialChecks}</h3>

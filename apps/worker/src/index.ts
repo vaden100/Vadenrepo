@@ -7,11 +7,15 @@ import { createServer } from 'node:http';
 import { loadConfig } from './config.js';
 import { createDb } from './db.js';
 import { log } from './log.js';
+import { importPhishingDatabase } from './outside/import.js';
 import { processJob, type MediaJob } from './pipeline.js';
 import { createStorage } from './storage.js';
 
 const config = loadConfig();
 const once = process.argv.includes('--once');
+// `node dist/index.js --import phishing_database [--limit N]`: refresh an outside list and exit.
+const importArg = process.argv.indexOf('--import');
+const limitArg = process.argv.indexOf('--limit');
 const deps = { config, db: createDb(config), storage: createStorage(config) };
 let stopping = false;
 let lastPoll = 0;
@@ -43,7 +47,23 @@ if (!config.supabaseUrl || !config.hasServiceRole) {
   log('error', 'worker.unconfigured', { hint: 'set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY' });
 }
 
-if (once) {
+if (importArg > 0) {
+  const source = process.argv[importArg + 1];
+  if (source !== 'phishing_database') {
+    log('error', 'outside.unknown_source', { source });
+    process.exit(2);
+  }
+  importPhishingDatabase(deps.db, {
+    limit: limitArg > 0 ? Number(process.argv[limitArg + 1]) : undefined,
+  })
+    .then(() => process.exit(0))
+    .catch((err: unknown) => {
+      log('error', 'outside.import_failed', {
+        err: err instanceof Error ? err.message : String(err),
+      });
+      process.exit(1);
+    });
+} else if (once) {
   drain()
     .then((n) => {
       log('info', 'worker.drained', { jobs: n });
@@ -67,6 +87,17 @@ if (once) {
     log('info', 'worker.listening', { port: config.port, storage: config.storageDriver }),
   );
   void loop();
+  // OUTSIDE_IMPORT=1: refresh outside lists once a day (first run 1 minute after start).
+  if (process.env.OUTSIDE_IMPORT === '1') {
+    const refresh = () =>
+      importPhishingDatabase(deps.db).catch((err: unknown) =>
+        log('error', 'outside.import_failed', {
+          err: err instanceof Error ? err.message : String(err),
+        }),
+      );
+    setTimeout(refresh, 60_000).unref();
+    setInterval(refresh, 24 * 3600_000).unref();
+  }
   const stop = () => {
     stopping = true;
     server.close();

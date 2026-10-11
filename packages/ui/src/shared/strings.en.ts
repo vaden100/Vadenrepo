@@ -337,6 +337,16 @@ export const en = {
     reportMatch: (name: string) =>
       `This might match a page already reported: ${name}. Is it the same one?`,
     reportMatchLink: 'See the page',
+    outsideTitle: 'Public warning lists',
+    outsideFound: (host: string, list: string) =>
+      `${host} is on ${list}, an open list of websites seen hosting phishing pages.`,
+    outsideUpdated: (d: string) => `List checked ${d}.`,
+    outsideCaveat:
+      'Lists like this can be wrong, and a site can change hands. This is not a review by our team.',
+    outsideMistake: 'Report a mistake to the list',
+    outsideSource: (license: string) => `Source license: ${license}`,
+    byNumbersTitle: 'By the numbers',
+    byNumbersSource: 'Source',
   },
   entity: {
     description: (name: string, place: string) =>

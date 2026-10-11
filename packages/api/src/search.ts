@@ -30,11 +30,24 @@ export interface SearchHit {
   links: SearchLink[];
 }
 
+/** A public list kept by someone else that includes this website (docs/open-data-sources.md). */
+export interface OutsideRecord {
+  source: string;
+  label: string;
+  url: string;
+  license: string;
+  falsePositiveUrl: string | null;
+  value: string;
+  listUpdatedAt: string | null;
+}
+
 export interface SearchResponse {
   query: { kind: string; display: string } | null;
   results: SearchHit[];
   /** Something matched an entity that is not public yet. No details are given. */
   underReview: boolean;
+  /** Outside lists that include the website searched for. Neutral facts, never part of ranking. */
+  outside: OutsideRecord[];
 }
 
 export interface FlyerHit {

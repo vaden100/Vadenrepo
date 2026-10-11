@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ByTheNumbers } from '@/components/content/ByTheNumbers';
 import { buttonClass, en, EvidenceSummary, LinkedPages, WhyMatched } from '@rmmm/ui/web';
 import { IdentifierProbe } from '@/components/content/IdentifierProbe';
 import { StorySequence } from '@/components/content/StorySequence';
@@ -41,6 +42,12 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      <div className="section">
+        <div className="container">
+          <ByTheNumbers />
+        </div>
+      </div>
 
       <section className="section" aria-labelledby="tags-title">
         <div className="container grid">

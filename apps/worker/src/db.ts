@@ -27,6 +27,12 @@ export function createDb(config: WorkerConfig) {
     rpc: <T>(fn: string, args: object = {}) =>
       call<T>(`/rpc/${fn}`, { method: 'POST', body: JSON.stringify(args) }),
     select: <T>(table: string, query: string) => call<T[]>(`/${table}?${query}`),
+    upsert: <T>(table: string, rows: object[], onConflict: string) =>
+      call<T[]>(`/${table}?on_conflict=${onConflict}`, {
+        method: 'POST',
+        body: JSON.stringify(rows),
+        headers: { prefer: 'resolution=merge-duplicates,return=minimal' },
+      }),
     update: <T>(table: string, filter: string, patch: object) =>
       call<T[]>(`/${table}?${filter}`, { method: 'PATCH', body: JSON.stringify(patch) }),
   };

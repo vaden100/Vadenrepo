@@ -23,7 +23,7 @@ test('submitting goes to /lookup and says so honestly when search is offline', a
   const input = page.getByLabel('Business, @handle, $cashtag, phone, email or website');
   await input.fill('@nailz2');
   await input.press('Enter');
-  await expect(page).toHaveURL(/\/lookup\?q=%40nailz2/);
+  await expect(page).toHaveURL(/\/lookup\?q=%40nailz2&from=home/);
   // This suite runs without a database; the stack E2E covers real results.
   await expect(
     page.getByRole('heading', {

@@ -55,6 +55,18 @@ Rules for any outside record we show:
 - Every provider goes into `/legal/subprocessors`, the CSP and `docs/operations.md` in the same
   change (CLAUDE.md), and its terms are checked first.
 
+## 2b. In use now (2026-10-11)
+
+- **Phishing.Database** (MIT, github.com/Phishing-Database/Phishing.Database): about 386,000
+  active phishing hosts, downloaded by the worker (`--import phishing_database`, or daily with
+  `OUTSIDE_IMPORT=1`). Website lookups say when the exact host is on the list, with the source,
+  the date, the license and a link to report a false positive. Measured: full import 15 s,
+  lookup 3 ms. Reachable from the build container because it is hosted on GitHub.
+- **FTC aggregate figures** on the home and lookup pages (`apps/web/content/stats.ts`), each
+  linked to the FTC document it comes from. Aggregates only, never about a named business.
+- Government sources in section 2 stay pending: this environment's network policy denies
+  ftc.gov, fcc.gov, cftc.gov, sec.gov and consumerfinance.gov.
+
 ## 3. What Phase 4 builds from this now
 
 - Lookup records a coarse `entry_point` (consent-gated analytics only).

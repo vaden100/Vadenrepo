@@ -123,6 +123,7 @@ test('a page nobody has reviewed yet only says "under review"', async ({ page })
     query: { kind: 'cashtag', display: `$hidden${R}` },
     results: [],
     underReview: true,
+    outside: [],
   });
   await decideConsent(page);
   await page.goto(`/lookup?q=${encodeURIComponent(`$Hidden${R}`)}`);
@@ -183,4 +184,21 @@ test('search over HTTP: p95 under 300 ms', async () => {
   const p95 = times[Math.floor(times.length * 0.95)]!;
   console.log(`HTTP search p95: ${p95.toFixed(1)} ms`);
   expect(p95).toBeLessThan(300);
+});
+
+test('a website on the public phishing list says so, with its source', async ({ page }) => {
+  const host = `login-cashapp-verify-${R}.weeblysite.demo`;
+  psql(
+    `insert into outside_records (source, type, norm) values ('phishing_database', 'domain', '${host}') on conflict do nothing`,
+  );
+  await decideConsent(page);
+  await page.goto(`/lookup?q=${encodeURIComponent(`https://${host}/pay`)}`);
+  const box = page.getByTestId('outside-records');
+  await expect(box).toContainText(`${host} is on Phishing.Database`);
+  await expect(box).toContainText('This is not a review by our team.');
+  await expect(box.getByRole('link', { name: 'Report a mistake to the list' })).toBeVisible();
+  // No entity matched, so our own answer is still the honest one.
+  await expect(page.getByText('No reports yet.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'By the numbers' })).toBeVisible();
+  await axe(page);
 });

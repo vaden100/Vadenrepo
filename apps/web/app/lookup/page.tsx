@@ -3,10 +3,13 @@ import Link from 'next/link';
 import { classify } from '@rmmm/search-core';
 import type { SearchResponse } from '@rmmm/api';
 import { buttonClass, EmptyState, en } from '@rmmm/ui/web';
+import { ByTheNumbers } from '@/components/content/ByTheNumbers';
 import { IdentifierProbe } from '@/components/content/IdentifierProbe';
 import { PageHead } from '@/components/content/PageHead';
 import { FlyerCheck } from '@/components/search/FlyerCheck';
 import { SearchResults } from '@/components/search/SearchResults';
+import { entryPoint } from '@/components/search/entry-point';
+import { SearchTracker } from '@/components/search/SearchTracker';
 import { renderTime } from '@/lib/time';
 import { log } from '@/lib/log';
 import { searchEverything } from '@/lib/server/search';
@@ -33,9 +36,10 @@ export async function generateMetadata({
 export default async function LookupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string | string[] }>;
+  searchParams: Promise<{ q?: string | string[]; from?: string }>;
 }) {
-  const raw = (await searchParams).q;
+  const sp = await searchParams;
+  const raw = sp.q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.slice(0, 200) ?? '';
   // Classified on the server too: the readout is server-rendered and works without JavaScript.
   const c = q ? classify(q) : null;
@@ -58,7 +62,14 @@ export default async function LookupPage({
         title={en.lookup.title}
         lede={en.lookup.lede}
       />
-      <IdentifierProbe initial={q} initialResult={c} autoFocus={!q} />
+      <IdentifierProbe initial={q} initialResult={c} autoFocus={!q} from="lookup" />
+      {data && c && (
+        <SearchTracker
+          entry={entryPoint(sp.from)}
+          kind={c.kind}
+          outcome={data.results.length ? 'matched' : data.underReview ? 'under_review' : 'none'}
+        />
+      )}
       {data && <SearchResults data={data} now={new Date(renderTime())} />}
       {unavailable && (
         <EmptyState
@@ -86,6 +97,7 @@ export default async function LookupPage({
           ))}
         </ol>
       </section>
+      <ByTheNumbers />
     </div>
   );
 }
