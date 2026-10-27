@@ -15,19 +15,21 @@ below is "as shown on the site on 2026-10-27" and still needs the director's con
 
 ## Organization
 
-| Fact            | Value (their words where quoted)                             | Source                | Status                                                                                                                      |
-| --------------- | ------------------------------------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Name            | "The Nonsocial One Gallery", short form "The NS1 Gallery"    | [P]                   | needs confirmation                                                                                                          |
-| Founded         | 2022                                                         | [P] "created in 2022" | needs confirmation                                                                                                          |
-| Tagline         | "Nonsocial. Not Antisocial."                                 | [R]                   | needs confirmation                                                                                                          |
-| Company name    | Stack Over Shine (S.O.S), written S★S with the star as the O | [D]                   | confirmed by the director on 2026-10-27; legal form, exact registered name and how it relates to The NS1 Gallery still open |
-| Hero line       | "HOME OF EVERYTHING S.A.F.E"                                 | [P], [R]              | needs confirmation                                                                                                          |
-| Owner / creator | DaShawn "Dub" Warfield, "Owner/Creator of The NS1 Gallery"   | [P]                   | needs confirmation, and clearance to name                                                                                   |
-| Legal name      | not shown                                                    | none                  | **missing**                                                                                                                 |
-| EIN             | not shown                                                    | none                  | **missing**                                                                                                                 |
-| Tax status      | not shown; the site says "Owner/Creator", not "nonprofit"    | none                  | **missing, blocks Give and Trust**                                                                                          |
-| Current site    | `https://thenonsocialonegallery.square.site` (Square Online) | [R]                   | confirmed by recording                                                                                                      |
-| Link hub        | `https://linktr.ee/thens1`                                   | [P]                   | needs confirmation                                                                                                          |
+| Fact                 | Value (their words where quoted)                             | Source                | Status                                                                                                 |
+| -------------------- | ------------------------------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Name                 | "The Nonsocial One Gallery", short form "The NS1 Gallery"    | [P]                   | needs confirmation                                                                                     |
+| Founded              | 2022                                                         | [P] "created in 2022" | needs confirmation                                                                                     |
+| Tagline              | "Nonsocial. Not Antisocial."                                 | [R]                   | needs confirmation                                                                                     |
+| Company name         | Stack Over Shine (S.O.S), written S★S with the star as the O | [D]                   | confirmed by the director on 2026-10-27; exact registered name still open                              |
+| Owner of the gallery | Stack Over Shine owns The NS1 Gallery                        | [D]                   | confirmed by the director on 2026-10-27                                                                |
+| Nonprofit            | Stack Over Shine is a nonprofit                              | [D]                   | confirmed by the director on 2026-10-27; 501(c) type and EIN to be provided                            |
+| Hero line            | "HOME OF EVERYTHING S.A.F.E"                                 | [P], [R]              | needs confirmation                                                                                     |
+| Owner / creator      | DaShawn "Dub" Warfield, "Owner/Creator of The NS1 Gallery"   | [P]                   | needs confirmation, and clearance to name                                                              |
+| Legal name           | Stack Over Shine (exact registered name to confirm)          | [D]                   | **placeholder on the site until confirmed**                                                            |
+| EIN                  | not provided yet                                             | none                  | **placeholder on the site** (director will supply)                                                     |
+| Tax status           | nonprofit; 501(c) type not provided yet                      | [D]                   | site says "nonprofit"; never "tax-deductible" or "501(c)(3)" until the determination letter is on file |
+| Current site         | `https://thenonsocialonegallery.square.site` (Square Online) | [R]                   | confirmed by recording                                                                                 |
+| Link hub             | `https://linktr.ee/thens1`                                   | [P]                   | needs confirmation                                                                                     |
 
 ## Mission (their words, verbatim, not edited)
 
@@ -83,3 +85,13 @@ director (SPEC 9), not an assumption.
 | Text                          | Square "Text us" button (number not visible) | [R]         |
 | Email, phone, mailing address | not shown                                    | **missing** |
 | Social                        | only the Linktree                            | [P]         |
+
+## Crisis resources (verified at the official source)
+
+| Resource                      | Value                                                                                                                                                                               | Source                                                                            | Verified                                                        |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| 988 Suicide & Crisis Lifeline | Call or text 988, or chat at 988lifeline.org. Free, confidential, 24/7, anywhere in the U.S. Also for mental health and substance use crises. Spanish: press 2 or text AYUDA to 988 | https://988lifeline.org/get-help/ , https://www.samhsa.gov/mental-health/988/faqs | 2026-10-27 (official pages via web search; re-verify quarterly) |
+| Veterans Crisis Line          | Call 988 and press 1, or text 838255                                                                                                                                                | https://www.samhsa.gov/mental-health/988/faqs                                     | 2026-10-27                                                      |
+| Emergency                     | Call 911 if someone is in immediate danger                                                                                                                                          | https://www.samhsa.gov/mental-health/988/faqs                                     | 2026-10-27                                                      |
+
+These are national services, not run by the gallery. S.A.F.E Sessions are not a crisis service.

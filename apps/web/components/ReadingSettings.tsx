@@ -109,20 +109,38 @@ export function ReadingSettingsForm() {
 }
 
 /** Button that opens the settings in a native <dialog> (focus trap and Escape for free). */
-export function ReadingSettingsButton({ className }: { className?: string }) {
+export function ReadingSettingsButton({
+  className,
+  iconOnly = false,
+}: {
+  className?: string;
+  /** Compact header version: the icon carries the accessible name. */
+  iconOnly?: boolean;
+}) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   return (
     <>
-      <Button
-        variant="quiet"
-        icon="settings"
-        className={className}
-        aria-haspopup="dialog"
-        onClick={() => ref.current?.showModal()}
-      >
-        {t.open}
-      </Button>
+      {iconOnly ? (
+        <button
+          type="button"
+          className={['icon-link', className].filter(Boolean).join(' ')}
+          aria-haspopup="dialog"
+          onClick={() => ref.current?.showModal()}
+        >
+          <Icon name="settings" label={t.open} />
+        </button>
+      ) : (
+        <Button
+          variant="quiet"
+          icon="settings"
+          className={className}
+          aria-haspopup="dialog"
+          onClick={() => ref.current?.showModal()}
+        >
+          {t.open}
+        </Button>
+      )}
       <dialog ref={ref} className="dialog" aria-labelledby={titleId}>
         <div className="dialog__head">
           <h2 id={titleId}>{t.heading}</h2>

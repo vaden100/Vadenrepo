@@ -1,8 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page } from '@playwright/test';
 
-/** Every public page (keep in sync with app/sitemap.ts once it exists). */
-export const PAGES = ['/', '/styleguide'];
+import { sitePages } from '../content/pages';
+
+/** Every page: the public index (content/pages.ts) plus pages kept out of the sitemap. */
+export const PAGES = [...sitePages.map((p) => p.path), '/offline'];
 
 export const MODES = {
   light: { colorScheme: 'light' },

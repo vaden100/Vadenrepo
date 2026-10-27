@@ -11,6 +11,7 @@ export default tseslint.config(
       '**/.next/**',
       '**/next-env.d.ts',
       'packages/ui/src/generated/**',
+      'apps/web/content/legal/generated.ts',
       'playwright-report/**',
       'test-results/**',
     ],

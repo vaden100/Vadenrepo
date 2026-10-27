@@ -24,3 +24,11 @@ export function flatten(obj: unknown, prefix = ''): Array<[key: string, value: s
   if (!obj || typeof obj !== 'object') return [];
   return Object.entries(obj).flatMap(([k, v]) => flatten(v, prefix ? `${prefix}.${k}` : k));
 }
+
+/** "once a month", "twice a month", "3 times a month". */
+export function perMonth(n: number, locale: string = defaultLocale): string {
+  const f = strings(locale).frequency;
+  if (n === 1) return f.once;
+  if (n === 2) return f.twice;
+  return format(f.many, { n });
+}

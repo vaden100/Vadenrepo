@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { en, flatten, format, locales, strings } from './index';
+import { en, flatten, format, locales, perMonth, strings } from './index';
 
 describe('i18n', () => {
   it('falls back to English', () => {
@@ -14,5 +14,13 @@ describe('i18n', () => {
   });
   it('has no empty strings', () => {
     for (const [k, v] of flatten(en)) expect(v.trim(), k).not.toBe('');
+  });
+});
+
+describe('perMonth', () => {
+  it('uses words for 1 and 2', () => {
+    expect(perMonth(1)).toBe('once a month');
+    expect(perMonth(2)).toBe('twice a month');
+    expect(perMonth(4)).toBe('4 times a month');
   });
 });

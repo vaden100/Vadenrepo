@@ -17,8 +17,10 @@
     "brand:check": "node scripts/sync-brand.mjs --check",
     "copy:check": "node scripts/check-copy.mjs",
     "readability": "node scripts/readability.mjs",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm brand:check && pnpm copy:check && pnpm readability",
-    "test:e2e": "pnpm --filter @ns1/web test:e2e"
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm brand:check && pnpm content:check && pnpm copy:check && pnpm readability",
+    "test:e2e": "pnpm --filter @ns1/web build:e2e && pnpm --filter @ns1/web test:e2e",
+    "content:sync": "node scripts/sync-content.mjs",
+    "content:check": "node scripts/sync-content.mjs --check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

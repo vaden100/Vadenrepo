@@ -7,16 +7,11 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 
 **These two decide the shape of the whole site; please answer first:**
 
-1. **The company is Stack Over Shine (S.O.S).** What is its exact registered name and type
-   (LLC, sole proprietorship, nonprofit corporation)? Does it own The NS1 Gallery, or is the gallery
-   a separate organization? Is either one a 501(c)(3), and if so what is the EIN?
-   (The build spec is for a nonprofit. Without nonprofit status the site will not ask for
-   "donations" or say "tax-deductible".)
-2. **What should the site's main action be?** For example "RSVP for the next S.A.F.E Session",
-   "Book a session", or "Give".
-
-Then:
-
+1. **Stack Over Shine (nonprofit, owns the gallery; confirmed 2026-10-27).** Still needed: exact
+   registered name, state of incorporation, 501(c) type and EIN, and the IRS determination letter.
+   Until then the site says "nonprofit" but never "tax-deductible" or "501(c)(3)".
+2. **Main action: decided as Give** (SPEC 2: no direct help services, so Give is primary;
+   S.A.F.E Sessions are the second door). Tell us if you want it the other way round.
 3. What does S.A.F.E stand for, if anything?
 4. What is "Slimeball" (in "personalize it to your Culture featuring Slimeball")?
 5. What is P30: your space or a partner venue? Can we name it and show the address?

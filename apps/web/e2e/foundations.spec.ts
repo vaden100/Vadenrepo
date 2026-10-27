@@ -47,7 +47,8 @@ test('skip link moves focus to main', async ({ page, browserName }) => {
 test('reading settings: keyboard, saved in the browser, applied before paint', async ({ page }) => {
   const problems = watchConsole(page);
   await page.goto('/');
-  const open = page.getByRole('banner').getByRole('button', { name: 'Reading settings' });
+  // The footer button is on every screen size (the header one is wide screens only).
+  const open = page.getByRole('contentinfo').getByRole('button', { name: 'Reading settings' });
   await open.focus();
   await page.keyboard.press('Enter');
   const dialog = page.getByRole('dialog', { name: 'Reading settings' });

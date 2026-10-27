@@ -7,3 +7,4 @@ apps/web/public/brand
 apps/web/app/icon.svg
 playwright-report
 test-results
+apps/web/content/legal/generated.ts

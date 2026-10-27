@@ -7,8 +7,11 @@ Website and app for **The NS1 Gallery** (The Nonsocial One Gallery, Indianapolis
 
 - One phase at a time (SPEC 18). A phase is done only when its acceptance checks pass in tests.
 - Current status: **Phase 0 partial** (from a pasted home page and a screen recording; crawl and
-  baseline blocked by the build environment's network), **Phase 1 done** (foundations).
-  Next: answers to `docs/placeholders.md` questions 1 and 2, then Phase 2.
+  baseline blocked by the build environment's network), **Phase 1 done** (foundations),
+  **Phase 2 done except the parts that need the crawl** (redirect map, beating `docs/baseline.md`).
+  Next: Phase 3 (Give with Zeffy, once the organization has an account).
+- Stack Over Shine (S.O.S) is the nonprofit; it owns The NS1 Gallery. EIN, 501(c) type and
+  registered name are placeholders until the director sends them.
 - Decide early and write it down in `docs/decisions.md` (date, decision, reason).
 - Never invent facts. Every fact on the site is in `docs/facts.md` with a source and in
   `apps/web/content/facts.ts`. Missing facts render as `<Placeholder>` and are listed in
@@ -38,7 +41,7 @@ pnpm install
 pnpm dev                 # http://localhost:3000, style guide at /styleguide
 pnpm check               # lint, format, typecheck, unit tests, brand check, copy check, readability
 pnpm build
-pnpm build && PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome pnpm test:e2e
+PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome pnpm test:e2e   # builds with SITE_URL for the test server
 ```
 
 ## Rules that are easy to break
@@ -48,8 +51,8 @@ pnpm build && PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1243/chrome-linux64/chr
 - No invented statistics, stories, quotes, partners, people, or "$X provides Y" claims.
 - Nothing about a real person (photo, name, story, quote) goes public without a consent record.
   The screen recording and session photos are NOT cleared yet: never commit them.
-- Do not say "donate", "nonprofit" or "tax-deductible" until the legal status is confirmed
-  (`docs/placeholders.md` question 1).
+- "Nonprofit" is confirmed. Never say "tax-deductible" or "501(c)(3)" until the determination
+  letter is on file (a browser test enforces this).
 - "Need A Lawyer?" stays off the site until counsel reviews it.
 
 **Copy (SPEC 6, enforced by `pnpm copy:check` and `pnpm readability`)**
@@ -78,8 +81,12 @@ pnpm build && PW_CHROMIUM_PATH=/opt/pw-browsers/chromium-1243/chrome-linux64/chr
 
 **Website**
 
-- Pages: unique title + description via `pageMetadata()`, exactly one `<h1>`.
-  Add new public pages to `e2e/helpers.ts` (`PAGES`) so axe, overflow and console checks cover them.
+- Pages: add every public page to `apps/web/content/pages.ts` (one list feeds the sitemap, search,
+  titles and the browser suite). Unique title + description via `pageMetadata()`, exactly one
+  `<h1>` (from `PageHead` on inner pages, with breadcrumbs and JSON-LD).
+- Every number shown on a page must appear in `docs/facts.md` (a browser test checks).
+- Long-form content: Markdown in `apps/web/content/legal/`, then `pnpm content:sync` (bundled, no
+  runtime file reads, because Cloudflare Workers have no filesystem).
 - Forms: shared `TextField` / `Checkbox`; never report success before the server confirms.
 - Scripts need the CSP nonce (`getNonce()`); never `'unsafe-inline'` or `'unsafe-eval'` in production.
 - New third party: CSP in `lib/security/headers.ts`, `/legal/subprocessors`, consent category, and

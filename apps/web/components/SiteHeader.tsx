@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { strings } from '@ns1/i18n';
-import { Logo } from '@ns1/ui';
+import { Icon, LinkButton, Logo } from '@ns1/ui';
+import { MobileMenu } from './MobileMenu';
+import { NavLinks } from './NavLinks';
 import { ReadingSettingsButton } from './ReadingSettings';
 
 export function SiteHeader() {
@@ -11,7 +13,19 @@ export function SiteHeader() {
         <Link href="/" className="site-header__home">
           <Logo label={t.site.logoAlt} />
         </Link>
-        <ReadingSettingsButton />
+        <NavLinks />
+        <div className="site-header__actions">
+          <Link href="/search" className="icon-link wide-only">
+            <Icon name="search" label={t.nav.search} />
+          </Link>
+          <span className="wide-only">
+            <ReadingSettingsButton iconOnly />
+          </span>
+          <LinkButton href="/give" variant="give" icon="heart" className="btn--compact">
+            {t.nav.give}
+          </LinkButton>
+          <MobileMenu />
+        </div>
       </div>
     </header>
   );
