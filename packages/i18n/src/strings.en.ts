@@ -139,11 +139,17 @@ export const en = {
     whenHeading: 'When and where',
     nextLabel: 'Next session:',
     sizeLine: 'About {min} to {max} people, {perMonth}.',
+    pausedHeading: 'On a winter break',
+    pausedProse:
+      'S.A.F.E Sessions are taking a break for the winter. They come back in {year}. RSVP opens here when the first date is set.',
+    pausedShort: 'On a winter break. Back in {year}.',
+    nextPaused: 'Coming back in {year}. Date to be announced.',
     notOpenHeading: 'RSVP opens soon',
     notOpenProse:
       'We will open RSVP here once the next date is set. Until then, text us from our current website to save a seat.',
     actions: {
       text: 'Text us to save a seat',
+      textPaused: 'Text us to hear when we are back',
       about: 'Learn about S.A.F.E Sessions',
     },
   },

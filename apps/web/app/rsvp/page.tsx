@@ -1,6 +1,6 @@
 import { format, perMonth, strings } from '@ns1/i18n';
 import { LinkButton, Notice } from '@ns1/ui';
-import { FactValue } from '@/components/Fact';
+import { NextSession } from '@/components/NextSession';
 import { PageHead } from '@/components/PageHead';
 import { facts } from '@/content/facts';
 import { page } from '@/content/pages';
@@ -17,6 +17,7 @@ export const metadata = pageMetadata({ ...meta });
  * server confirms (SPEC 3, 8.7). Until then this page is honest about how to save a seat.
  */
 export default function RsvpPage() {
+  const { paused, returnYear } = facts.sessionStatus.value;
   const venue = facts.venue.value;
   const size = facts.sessionSize.value;
   return (
@@ -29,7 +30,7 @@ export default function RsvpPage() {
       <section aria-labelledby="when">
         <h2 id="when">{r.whenHeading}</h2>
         <p>
-          {r.nextLabel} <FactValue value={facts.nextSession.value} name="nextSession" />
+          {r.nextLabel} <NextSession />
         </p>
         <address>
           {venue.name}
@@ -47,11 +48,11 @@ export default function RsvpPage() {
         </p>
       </section>
       <section className="section" aria-labelledby="open">
-        <h2 id="open">{r.notOpenHeading}</h2>
-        <Notice>{r.notOpenProse}</Notice>
+        <h2 id="open">{paused ? r.pausedHeading : r.notOpenHeading}</h2>
+        <Notice>{paused ? format(r.pausedProse, { year: returnYear }) : r.notOpenProse}</Notice>
         <div className="cluster section-actions">
           <LinkButton href={facts.currentSite.value} icon="chat">
-            {r.actions.text}
+            {paused ? r.actions.textPaused : r.actions.text}
           </LinkButton>
           <LinkButton href="/programs/safe-sessions" variant="secondary">
             {r.actions.about}

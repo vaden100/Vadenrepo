@@ -44,17 +44,18 @@ suggestion for the director to approve (SPEC 5.1).
 
 ## Programs and offers
 
-| Program                           | What the site says                                                                                                                                                               | Source |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| S.A.F.E Sessions                  | "Niche roundtable conversations hosted at P30. Using movies, art, music, viral moments, current news for the purpose of cultural awareness, expression and conflict resolution." | [P]    |
-| S.A.F.E Sessions, size and rhythm | "typically 10-15 people twice a month with light refreshments"                                                                                                                   | [P]    |
-| S.A.F.E Sessions, extras          | "Meet Special Guests & Enjoy Refreshments"                                                                                                                                       | [P]    |
-| S.A.F.E Sessions, promise         | "Your personal stories, grievances, questions, concerns, jokes etc… are S.A.F.E here"                                                                                            | [P]    |
-| Book a S.A.F.E Session            | "Enjoyed a session? Want to personalize it to your Culture featuring Slimeball? Let's talk hosting, location, subject material, schedule and more…"                              | [P]    |
-| Creative Consulting               | "Let's sit down and actually talk. Business advice, Q&A sessions, Strategize etc"                                                                                                | [P]    |
-| Personal Collab                   | "Podcasts, Event Hosting, Content etc…Let's plan!"                                                                                                                               | [P]    |
-| Need A Lawyer?                    | "Let's talk! Find out what services we can provide, get on a Zoom with 2 reps and get the help you need!"                                                                        | [P]    |
-| Slogan                            | "Where Conversation Together Becomes Growth"                                                                                                                                     | [P]    |
+| Program                           | What the site says                                                                                                                                                               | Source                                      |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| S.A.F.E Sessions                  | "Niche roundtable conversations hosted at P30. Using movies, art, music, viral moments, current news for the purpose of cultural awareness, expression and conflict resolution." | [P]                                         |
+| S.A.F.E Sessions, size and rhythm | "typically 10-15 people twice a month with light refreshments"                                                                                                                   | [P]                                         |
+| S.A.F.E Sessions, extras          | "Meet Special Guests & Enjoy Refreshments"                                                                                                                                       | [P]                                         |
+| S.A.F.E Sessions, status          | Paused for the winter; returning in 2027 (no date yet)                                                                                                                           | [D] confirmed by the director on 2026-10-27 |
+| S.A.F.E Sessions, promise         | "Your personal stories, grievances, questions, concerns, jokes etc… are S.A.F.E here"                                                                                            | [P]                                         |
+| Book a S.A.F.E Session            | "Enjoyed a session? Want to personalize it to your Culture featuring Slimeball? Let's talk hosting, location, subject material, schedule and more…"                              | [P]                                         |
+| Creative Consulting               | "Let's sit down and actually talk. Business advice, Q&A sessions, Strategize etc"                                                                                                | [P]                                         |
+| Personal Collab                   | "Podcasts, Event Hosting, Content etc…Let's plan!"                                                                                                                               | [P]                                         |
+| Need A Lawyer?                    | "Let's talk! Find out what services we can provide, get on a Zoom with 2 reps and get the help you need!"                                                                        | [P]                                         |
+| Slogan                            | "Where Conversation Together Becomes Growth"                                                                                                                                     | [P]                                         |
 
 ## Places
 

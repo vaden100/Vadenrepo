@@ -3,6 +3,7 @@ import { format, perMonth, strings } from '@ns1/i18n';
 import { LinkButton } from '@ns1/ui';
 import { CrisisBox } from '@/components/CrisisBox';
 import { FactValue } from '@/components/Fact';
+import { NextSession } from '@/components/NextSession';
 import { PageHead } from '@/components/PageHead';
 import { facts } from '@/content/facts';
 import { page } from '@/content/pages';
@@ -65,7 +66,7 @@ export default async function ProgramPage({ params }: { params: Promise<{ slug: 
               {venue.city}, {venue.region} {venue.postalCode}
             </address>
             <p>
-              {p.nextLabel} <FactValue value={facts.nextSession.value} name="nextSession" />
+              {p.nextLabel} <NextSession />
             </p>
           </section>
         </>

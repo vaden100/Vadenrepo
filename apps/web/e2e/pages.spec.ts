@@ -63,6 +63,7 @@ test('home: doors, signature table with its text, structured data', async ({ pag
   );
   await expect(page.getByRole('link', { name: 'Book or collaborate' })).toBeVisible();
   await expect(page.getByText('10 to 15 people sit at each S.A.F.E Session')).toBeVisible();
+  await expect(page.getByText('On a winter break. Back in 2027.')).toBeVisible();
   const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
   const types = ld.map((j) => JSON.parse(j)['@type']);
   expect(types).toContain('NGO');
@@ -117,4 +118,11 @@ test.describe('without JavaScript', () => {
       page.locator('.mobile-menu').getByRole('link', { name: 'Transparency' }),
     ).toBeVisible();
   });
+});
+
+test('RSVP page explains the winter break and takes no sign-ups yet', async ({ page }) => {
+  await page.goto('/rsvp');
+  await expect(page.getByRole('heading', { name: 'On a winter break' })).toBeVisible();
+  await expect(page.getByText('Coming back in 2027. Date to be announced.')).toBeVisible();
+  await expect(page.locator('main form')).toHaveCount(0);
 });

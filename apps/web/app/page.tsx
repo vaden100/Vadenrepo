@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { format, perMonth, strings } from '@ns1/i18n';
-import { LinkButton, Placeholder, Roundtable, Shape } from '@ns1/ui';
+import { Icon, LinkButton, Placeholder, Roundtable, Shape } from '@ns1/ui';
 import { FactValue } from '@/components/Fact';
 import { JsonLd } from '@/components/JsonLd';
 import { facts } from '@/content/facts';
@@ -65,6 +65,12 @@ export default function HomePage() {
           <div className="door">
             <h3>{h.sessionTitle}</h3>
             <p>{h.sessionProse}</p>
+            {facts.sessionStatus.value.paused && (
+              <p className="door__status">
+                <Icon name="calendar" />{' '}
+                {format(t.rsvp.pausedShort, { year: facts.sessionStatus.value.returnYear })}
+              </p>
+            )}
             <LinkButton href="/rsvp" icon="calendar">
               {h.actions.rsvp}
             </LinkButton>

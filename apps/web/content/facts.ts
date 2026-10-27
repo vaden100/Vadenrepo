@@ -102,6 +102,12 @@ export const facts = {
     status: 'needs confirmation',
   },
   nextSession: { value: null, source: 'docs/placeholders.md question 6', status: 'missing' },
+  /** Sessions are on a winter break (director, 2026-10-27). Set paused: false when they restart. */
+  sessionStatus: {
+    value: { paused: true, returnYear: 2027 },
+    source: 'docs/facts.md#programs-and-offers (S.A.F.E Sessions, status), director 2026-10-27',
+    status: 'confirmed',
+  },
   email: { value: null, source: 'docs/placeholders.md question 11', status: 'missing' },
   phone: { value: null, source: 'docs/placeholders.md question 11', status: 'missing' },
   mailingAddress: { value: null, source: 'docs/placeholders.md question 11', status: 'missing' },

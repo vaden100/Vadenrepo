@@ -504,3 +504,10 @@ address {
 .section-actions {
   margin-top: var(--space-5);
 }
+
+.door__status {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-weight: 700;
+}

@@ -14,7 +14,7 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 3. What does S.A.F.E stand for, if anything?
 4. What is "Slimeball" (in "personalize it to your Culture featuring Slimeball")?
 5. What is P30: your space or a partner venue? Can we name it and show the address?
-6. When is the next S.A.F.E Session? Fixed days (for example every 1st and 3rd Thursday) or set each time?
+6. Sessions are paused for the winter and return in 2027 (answered 2026-10-27). When you set the first 2027 date, send it with the time, and we open RSVP.
 7. Do sessions cost anything? Do guests need to sign up, and is there an age limit?
 8. Who are the "2 reps" for "Need A Lawyer?" Are they licensed attorneys, a firm, or a referral
    service? Is it free? (Counsel must review this before it goes on the new site.)
