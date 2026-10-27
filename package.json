@@ -1,0 +1,37 @@
+{
+  "name": "ns1-site",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @ns1/web dev",
+    "build": "pnpm --filter @ns1/web build",
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test && vitest run --root scripts",
+    "brand:sync": "node scripts/sync-brand.mjs",
+    "brand:check": "node scripts/sync-brand.mjs --check",
+    "copy:check": "node scripts/check-copy.mjs",
+    "readability": "node scripts/readability.mjs",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm brand:check && pnpm copy:check && pnpm readability",
+    "test:e2e": "pnpm --filter @ns1/web test:e2e"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@next/eslint-plugin-next": "16.4.3",
+    "@types/node": "^22.20.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^7.1.0",
+    "globals": "^17.0.0",
+    "opentype.js": "^1.3.4",
+    "prettier": "^3.6.0",
+    "svgo": "^4.0.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^3.2.0"
+  }
+}

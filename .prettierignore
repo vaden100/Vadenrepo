@@ -1,0 +1,9 @@
+node_modules
+.next
+pnpm-lock.yaml
+SPEC.md
+packages/ui/src/generated
+apps/web/public/brand
+apps/web/app/icon.svg
+playwright-report
+test-results
