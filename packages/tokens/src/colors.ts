@@ -2,7 +2,7 @@
  * Color tokens (SPEC 6.4). One source of truth for every theme.
  *
  * Mapped from the colors on the current site (docs/discovery.md, brand inventory): black ink,
- * whiteboard white and the red of the S.A.F.E star. Adjustments for contrast are recorded in
+ * whiteboard white and the red of the S.O.S (Stack Over Shine) star. Adjustments for contrast are recorded in
  * docs/decisions.md. Every pair used in the UI is tested in contrast.test.ts.
  */
 export const colorTokenNames = [
@@ -35,7 +35,7 @@ export const themes: Record<ThemeName, Palette> = {
     textSecondary: '#3B3B3B',
     border: '#D4D2CC', // decorative dividers only, never the only boundary of a control
     borderStrong: '#6B6B6B', // form controls (3:1)
-    accent: '#9E0019', // S.A.F.E star red, darkened from the screen red for 7:1
+    accent: '#9E0019', // S.O.S star red, darkened from the screen red for 7:1
     onAccent: '#FFFFFF',
     give: '#9E0019',
     onGive: '#FFFFFF',

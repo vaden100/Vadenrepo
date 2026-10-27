@@ -77,7 +77,7 @@ export const en = {
       'This is a stand-in logo. It will be swapped for the real NS1 logo when we get the file.',
     shapesHeading: 'Shapes',
     shapesProse:
-      'The shapes come from the sessions: the round table, the whiteboard marker line, the star and the speech bubble.',
+      'The shapes come from the gallery. They are the round table, the marker line, the S.O.S star and a speech bubble.',
     buttonsHeading: 'Buttons',
     formsHeading: 'Form fields',
     statesHeading: 'Notices and loading',

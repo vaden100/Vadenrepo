@@ -16,7 +16,7 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 
 Then:
 
-3. What does S.A.F.E stand for, if anything?
+3. What does S.A.F.E stand for, if anything? And how should the site use S.O.S, "Stack Over Shine": a motto for the whole gallery, a brand, a series?
 4. What is "Slimeball" (in "personalize it to your Culture featuring Slimeball")?
 5. What is P30: your space or a partner venue? Can we name it and show the address?
 6. When is the next S.A.F.E Session? Fixed days (for example every 1st and 3rd Thursday) or set each time?
