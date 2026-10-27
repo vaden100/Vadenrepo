@@ -53,8 +53,14 @@ test('the site never claims tax deductibility before it is confirmed', async ({ 
 
 test('home: doors, signature table with its text, structured data', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('link', { name: 'Give to the gallery' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'See S.A.F.E Sessions' }).first()).toBeVisible();
+  // Primary action first (director's choice): RSVP, then Give.
+  const doors = page.locator('.door .btn');
+  await expect(doors.nth(0)).toHaveText('RSVP for the next session');
+  await expect(doors.nth(1)).toHaveText('Give to the gallery');
+  await expect(page.getByRole('banner').getByRole('link', { name: 'RSVP' })).toHaveAttribute(
+    'href',
+    '/rsvp',
+  );
   await expect(page.getByRole('link', { name: 'Book or collaborate' })).toBeVisible();
   await expect(page.getByText('10 to 15 people sit at each S.A.F.E Session')).toBeVisible();
   const ld = await page.locator('script[type="application/ld+json"]').allTextContents();

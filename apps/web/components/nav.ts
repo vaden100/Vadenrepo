@@ -17,6 +17,7 @@ export const footerNav = [
   { href: '/about/team', label: t.team },
   { href: '/news', label: t.news },
   { href: '/press', label: t.press },
+  { href: '/rsvp', label: t.rsvp },
   { href: '/give', label: t.give },
   { href: '/search', label: t.search },
 ];

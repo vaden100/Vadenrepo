@@ -19,7 +19,10 @@ export const metadata = pageMetadata({
   path: '/',
 });
 
-/** Home (SPEC 5.1). The order of sections is fixed by the spec. */
+/**
+ * Home (SPEC 5.1). The order of sections is fixed by the spec. Primary action: RSVP for the next
+ * S.A.F.E Session (director's choice, docs/decisions.md); Give is the second door.
+ */
 export default function HomePage() {
   const size = facts.sessionSize.value;
   return (
@@ -60,17 +63,17 @@ export default function HomePage() {
         </h2>
         <div className="doors">
           <div className="door">
-            <h3>{h.giveTitle}</h3>
-            <p>{h.giveProse}</p>
-            <LinkButton href="/give" variant="give" icon="heart">
-              {h.actions.give}
+            <h3>{h.sessionTitle}</h3>
+            <p>{h.sessionProse}</p>
+            <LinkButton href="/rsvp" icon="calendar">
+              {h.actions.rsvp}
             </LinkButton>
           </div>
           <div className="door">
-            <h3>{h.sessionTitle}</h3>
-            <p>{h.sessionProse}</p>
-            <LinkButton href="/programs/safe-sessions" icon="people">
-              {h.actions.session}
+            <h3>{h.giveTitle}</h3>
+            <p>{h.giveProse}</p>
+            <LinkButton href="/give" variant="secondary" icon="heart">
+              {h.actions.give}
             </LinkButton>
           </div>
           <div className="door">
@@ -156,11 +159,11 @@ export default function HomePage() {
         <h2 id="final">{h.finalHeading}</h2>
         <p>{h.finalProse}</p>
         <div className="cluster">
-          <LinkButton href="/give" variant="give" icon="heart">
-            {h.actions.giveMonthly}
+          <LinkButton href="/rsvp" icon="calendar">
+            {h.actions.rsvp}
           </LinkButton>
-          <LinkButton href="/programs/safe-sessions" variant="secondary">
-            {h.actions.session}
+          <LinkButton href="/give" variant="secondary" icon="heart">
+            {h.actions.giveMonthly}
           </LinkButton>
         </div>
       </section>

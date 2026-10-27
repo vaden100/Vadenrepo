@@ -92,9 +92,15 @@ export default async function ProgramPage({ params }: { params: Promise<{ slug: 
       <section className="section">
         <h2>{p.joinHeading}</h2>
         <p>{program.join === 'session' ? p.joinSessionProse : p.joinContactProse}</p>
-        <LinkButton href="/contact" icon="arrow-right">
-          {p.actions.contact}
-        </LinkButton>
+        {program.join === 'session' ? (
+          <LinkButton href="/rsvp" icon="calendar">
+            {t.home.actions.rsvp}
+          </LinkButton>
+        ) : (
+          <LinkButton href="/contact" icon="arrow-right">
+            {p.actions.contact}
+          </LinkButton>
+        )}
       </section>
 
       {isSafe && <CrisisBox />}

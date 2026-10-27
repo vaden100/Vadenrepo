@@ -21,8 +21,8 @@ export function SiteHeader() {
           <span className="wide-only">
             <ReadingSettingsButton iconOnly />
           </span>
-          <LinkButton href="/give" variant="give" icon="heart" className="btn--compact">
-            {t.nav.give}
+          <LinkButton href="/rsvp" icon="calendar" className="btn--compact">
+            {t.nav.rsvp}
           </LinkButton>
           <MobileMenu />
         </div>

@@ -30,6 +30,12 @@ export const sitePages: SitePage[] = [
     keywords: p.quote,
   })),
   {
+    path: '/rsvp',
+    title: t.rsvp.title,
+    description: t.rsvp.description,
+    keywords: 'rsvp sign up seat next session date attend',
+  },
+  {
     path: '/give',
     title: t.give.title,
     description: t.give.description,

@@ -10,8 +10,7 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 1. **Stack Over Shine (nonprofit, owns the gallery; confirmed 2026-10-27).** Still needed: exact
    registered name, state of incorporation, 501(c) type and EIN, and the IRS determination letter.
    Until then the site says "nonprofit" but never "tax-deductible" or "501(c)(3)".
-2. **Main action: decided as Give** (SPEC 2: no direct help services, so Give is primary;
-   S.A.F.E Sessions are the second door). Tell us if you want it the other way round.
+2. **Main action: RSVP for the next S.A.F.E Session** (answered 2026-10-27). Give is second.
 3. What does S.A.F.E stand for, if anything?
 4. What is "Slimeball" (in "personalize it to your Culture featuring Slimeball")?
 5. What is P30: your space or a partner venue? Can we name it and show the address?
