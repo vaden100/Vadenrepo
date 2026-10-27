@@ -7,8 +7,9 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 
 **These two decide the shape of the whole site; please answer first:**
 
-1. **Is The NS1 Gallery a registered nonprofit?** If yes: legal name, EIN, and is it a 501(c)(3)?
-   If no: is it an LLC or sole proprietorship, and do you plan to apply, or use a fiscal sponsor?
+1. **The company is Stack Over Shine (S.O.S).** What is its exact registered name and type
+   (LLC, sole proprietorship, nonprofit corporation)? Does it own The NS1 Gallery, or is the gallery
+   a separate organization? Is either one a 501(c)(3), and if so what is the EIN?
    (The build spec is for a nonprofit. Without nonprofit status the site will not ask for
    "donations" or say "tax-deductible".)
 2. **What should the site's main action be?** For example "RSVP for the next S.A.F.E Session",
@@ -16,7 +17,7 @@ Plain questions only the organization can answer. Grouped by who answers. Each a
 
 Then:
 
-3. What does S.A.F.E stand for, if anything? And how should the site use S.O.S, "Stack Over Shine": a motto for the whole gallery, a brand, a series?
+3. What does S.A.F.E stand for, if anything?
 4. What is "Slimeball" (in "personalize it to your Culture featuring Slimeball")?
 5. What is P30: your space or a partner venue? Can we name it and show the address?
 6. When is the next S.A.F.E Session? Fixed days (for example every 1st and 3rd Thursday) or set each time?

@@ -79,7 +79,7 @@ None seen. Privacy, terms, accessibility: not seen.
 
 - Logo: hand-drawn "NS1" mark, black on white, raster. No vector file seen: the spec's
   temporary wordmark rule applies until a vector exists (SPEC 6.6).
-- Second mark: "S★S", S.O.S, "Stack Over Shine" (confirmed by the director), with a red star as the O, used as a video watermark.
+- Second mark: "S★S", the company Stack Over Shine (S.O.S), confirmed by the director, with a red star as the O, used as a video watermark.
 - Colors seen: black, white, a red accent (star, whiteboard drawings). No brand guide seen.
 - Fonts: Square defaults (sans-serif, italic body).
 - Photography: real session photos and video. Consent and rights: question for the director.

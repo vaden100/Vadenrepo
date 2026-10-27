@@ -15,19 +15,19 @@ below is "as shown on the site on 2026-10-27" and still needs the director's con
 
 ## Organization
 
-| Fact            | Value (their words where quoted)                             | Source                | Status                                                              |
-| --------------- | ------------------------------------------------------------ | --------------------- | ------------------------------------------------------------------- |
-| Name            | "The Nonsocial One Gallery", short form "The NS1 Gallery"    | [P]                   | needs confirmation                                                  |
-| Founded         | 2022                                                         | [P] "created in 2022" | needs confirmation                                                  |
-| Tagline         | "Nonsocial. Not Antisocial."                                 | [R]                   | needs confirmation                                                  |
-| S.O.S           | "Stack Over Shine", written S★S with the star as the O       | [D]                   | confirmed by the director; how the site should use it is still open |
-| Hero line       | "HOME OF EVERYTHING S.A.F.E"                                 | [P], [R]              | needs confirmation                                                  |
-| Owner / creator | DaShawn "Dub" Warfield, "Owner/Creator of The NS1 Gallery"   | [P]                   | needs confirmation, and clearance to name                           |
-| Legal name      | not shown                                                    | none                  | **missing**                                                         |
-| EIN             | not shown                                                    | none                  | **missing**                                                         |
-| Tax status      | not shown; the site says "Owner/Creator", not "nonprofit"    | none                  | **missing, blocks Give and Trust**                                  |
-| Current site    | `https://thenonsocialonegallery.square.site` (Square Online) | [R]                   | confirmed by recording                                              |
-| Link hub        | `https://linktr.ee/thens1`                                   | [P]                   | needs confirmation                                                  |
+| Fact            | Value (their words where quoted)                             | Source                | Status                                                                                                                      |
+| --------------- | ------------------------------------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Name            | "The Nonsocial One Gallery", short form "The NS1 Gallery"    | [P]                   | needs confirmation                                                                                                          |
+| Founded         | 2022                                                         | [P] "created in 2022" | needs confirmation                                                                                                          |
+| Tagline         | "Nonsocial. Not Antisocial."                                 | [R]                   | needs confirmation                                                                                                          |
+| Company name    | Stack Over Shine (S.O.S), written S★S with the star as the O | [D]                   | confirmed by the director on 2026-10-27; legal form, exact registered name and how it relates to The NS1 Gallery still open |
+| Hero line       | "HOME OF EVERYTHING S.A.F.E"                                 | [P], [R]              | needs confirmation                                                                                                          |
+| Owner / creator | DaShawn "Dub" Warfield, "Owner/Creator of The NS1 Gallery"   | [P]                   | needs confirmation, and clearance to name                                                                                   |
+| Legal name      | not shown                                                    | none                  | **missing**                                                                                                                 |
+| EIN             | not shown                                                    | none                  | **missing**                                                                                                                 |
+| Tax status      | not shown; the site says "Owner/Creator", not "nonprofit"    | none                  | **missing, blocks Give and Trust**                                                                                          |
+| Current site    | `https://thenonsocialonegallery.square.site` (Square Online) | [R]                   | confirmed by recording                                                                                                      |
+| Link hub        | `https://linktr.ee/thens1`                                   | [P]                   | needs confirmation                                                                                                          |
 
 ## Mission (their words, verbatim, not edited)
 
@@ -71,7 +71,7 @@ Whether P30 is the gallery's own space or a partner venue: unknown.
 | Whiteboard photo | Session whiteboard with names and drawings                                                      | [R]      |
 | Video 2          | Under "Where Conversation Together Becomes Growth", session table scene                         | [R]      |
 | Logo             | Hand-drawn "NS1" mark in the header, raster on Square                                           | [R]      |
-| Second mark      | "S★S" watermark on video: S.O.S, "Stack Over Shine" (the star is the O)                         | [R], [D] |
+| Second mark      | "S★S" watermark on video: the company, Stack Over Shine (S.O.S)                                 | [R], [D] |
 
 Identifiable people appear in photos and videos. Consent and rights are a question for the
 director (SPEC 9), not an assumption.

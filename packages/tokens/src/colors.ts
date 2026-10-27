@@ -2,7 +2,7 @@
  * Color tokens (SPEC 6.4). One source of truth for every theme.
  *
  * Mapped from the colors on the current site (docs/discovery.md, brand inventory): black ink,
- * whiteboard white and the red of the S.O.S (Stack Over Shine) star. Adjustments for contrast are recorded in
+ * whiteboard white and the red star of the Stack Over Shine (S.O.S) logo. Adjustments for contrast are recorded in
  * docs/decisions.md. Every pair used in the UI is tested in contrast.test.ts.
  */
 export const colorTokenNames = [

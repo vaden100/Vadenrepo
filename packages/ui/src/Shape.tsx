@@ -3,7 +3,7 @@ import { BrandSvgElement } from './svg';
 
 /**
  * The visual-language primitives (SPEC 7.2), always decorative. Shapes come from the
- * sessions: the round table, the whiteboard marker line, the S.O.S (Stack Over Shine) star, a speech bubble.
+ * sessions: the round table, the whiteboard marker line, the star from the Stack Over Shine (S.O.S) logo, a speech bubble.
  */
 export function Shape({ name, className }: { name: ShapeName; className?: string }) {
   return (
